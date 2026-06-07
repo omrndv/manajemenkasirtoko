@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Laporan Penjualan')}"></head>
+<body>
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'laporan')}"></aside>
+
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                    <div>
+                        <p class="text-sm font-semibold text-blue-600">Sales Report</p>
+                        <h1 class="text-3xl font-bold text-slate-900">Laporan Penjualan</h1>
+                        <p class="text-slate-500 mt-1">Pantau total penjualan, jumlah transaksi, dan barang terlaris.</p>
+                    </div>
+
+                    <a href="/transaksi" class="pos-btn-primary">
+                        Transaksi Baru
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-4 gap-5 mb-8">
+                    <div class="pos-card p-6">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Periode</p>
+                        <p class="text-xl font-bold text-slate-900 mt-3" th:text="${laporan.periode}"></p>
+                    </div>
+
+                    <div class="pos-card p-6">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Penjualan</p>
+                        <p class="text-2xl font-bold text-blue-700 mt-3" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPenjualan)}"></p>
+                    </div>
+
+                    <div class="pos-card p-6">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Jumlah Transaksi</p>
+                        <p class="text-2xl font-bold text-green-700 mt-3" th:text="${jumlahTransaksi}"></p>
+                    </div>
+
+                    <div class="pos-card p-6">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Barang Terlaris</p>
+                        <p class="text-xl font-bold text-orange-700 mt-3" th:text="${barangTerlaris}"></p>
+                    </div>
+                </div>
+
+                <div class="pos-card overflow-hidden">
+                    <div class="p-6 border-b border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-900">Daftar Transaksi</h2>
+                        <p class="text-slate-500 text-sm mt-1">Ringkasan transaksi yang masuk ke laporan penjualan.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="pos-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Tanggal</th>
+                                    <th>Total Bayar</th>
+                                    <th>Jumlah Item</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr th:each="transaksi : ${daftarTransaksi}">
+                                    <td class="font-bold" th:text="${transaksi.idTransaksi}"></td>
+                                    <td th:text="${transaksi.tanggal}"></td>
+                                    <td class="font-bold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></td>
+                                    <td>
+                                        <span class="pos-badge badge-green" th:text="${transaksi.daftarItem.size() + ' item'}"></span>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${daftarTransaksi.size() == 0}">
+                                    <td colspan="4" class="text-center text-slate-500 py-10">
+                                        Belum ada transaksi untuk laporan.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

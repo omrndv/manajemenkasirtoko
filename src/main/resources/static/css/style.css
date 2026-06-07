@@ -1,0 +1,152 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f6f7fb;
+    color: #111827;
+}
+
+.pos-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+}
+
+.pos-sidebar {
+    background: #0f172a;
+    color: white;
+}
+
+.pos-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    color: #cbd5e1;
+    transition: 0.2s ease;
+}
+
+.pos-menu:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.pos-menu-active {
+    background: #2563eb;
+    color: white;
+}
+
+.pos-btn-primary {
+    background: #2563eb;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.pos-btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.pos-btn-danger {
+    background: #ef4444;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.pos-btn-danger:hover {
+    background: #dc2626;
+}
+
+.pos-btn-warning {
+    background: #f59e0b;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.pos-btn-warning:hover {
+    background: #d97706;
+}
+
+.pos-input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 11px 14px;
+    outline: none;
+    background: white;
+    transition: 0.2s ease;
+}
+
+.pos-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.pos-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.pos-table th {
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.pos-table td {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pos-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-blue {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge-green {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-orange {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+@media (min-width: 768px) {
+    body:has(.pos-sidebar) {
+        overflow: hidden;
+    }
+
+    body:has(.pos-sidebar) main {
+        margin-left: 18rem;
+        height: 100vh;
+        overflow-y: auto;
+    }
+}

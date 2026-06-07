@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <head th:fragment="head(title)">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="${title}">Manajemen Kasir</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+
+    <aside th:fragment="sidebar(user, activeMenu)" class="pos-sidebar fixed left-0 top-0 h-screen w-72 hidden md:flex flex-col p-6 z-40">
+        <div class="mb-10">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-xl font-bold mb-4">
+                K
+            </div>
+            <h1 class="text-xl font-bold">KasirToko</h1>
+            <p class="text-sm text-slate-400">POS Management</p>
+        </div>
+
+        <nav class="space-y-2">
+            <a href="/dashboard"
+               class="pos-menu"
+               th:classappend="${activeMenu == 'dashboard'} ? ' pos-menu-active' : ''">
+                Dashboard
+            </a>
+
+            <a th:if="${user != null and user.role == 'Admin'}"
+               href="/barang"
+               class="pos-menu"
+               th:classappend="${activeMenu == 'barang'} ? ' pos-menu-active' : ''">
+                Data Barang
+            </a>
+
+            <a href="/transaksi"
+               class="pos-menu"
+               th:classappend="${activeMenu == 'transaksi'} ? ' pos-menu-active' : ''">
+                Transaksi
+            </a>
+
+            <a href="/riwayat-transaksi"
+               class="pos-menu"
+               th:classappend="${activeMenu == 'riwayat'} ? ' pos-menu-active' : ''">
+                Riwayat
+            </a>
+
+            <a th:if="${user != null and user.role == 'Admin'}"
+               href="/laporan"
+               class="pos-menu"
+               th:classappend="${activeMenu == 'laporan'} ? ' pos-menu-active' : ''">
+                Laporan
+            </a>
+        </nav>
+
+        <div class="mt-auto">
+            <a href="/logout" class="pos-menu">Logout</a>
+        </div>
+    </aside>
+
+</body>
+</html>

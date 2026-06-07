@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Data Barang')}"></head>
+<body>
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'barang')}"></aside>
+
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                    <div>
+                        <p class="text-sm font-semibold text-blue-600">Inventory</p>
+                        <h1 class="text-3xl font-bold text-slate-900">Data Barang</h1>
+                        <p class="text-slate-500 mt-1">Kelola data barang dan stok toko.</p>
+                    </div>
+
+                    <a href="/barang/tambah" class="pos-btn-primary">
+                        + Tambah Barang
+                    </a>
+                </div>
+
+                <div class="pos-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="pos-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Barang</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="barang : ${daftarBarang}">
+                                    <td class="font-bold" th:text="${barang.idBarang}"></td>
+                                    <td th:text="${barang.namaBarang}"></td>
+                                    <td th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(barang.harga)}"></td>
+                                    <td>
+                                        <span class="pos-badge badge-green" th:text="${barang.stok + ' tersedia'}"></span>
+                                    </td>
+                                    <td>
+                                        <div class="flex gap-2">
+                                            <a th:href="@{/barang/edit/{id}(id=${barang.idBarang})}" class="pos-btn-warning">
+                                                Edit
+                                            </a>
+                                            <a th:href="@{/barang/hapus/{id}(id=${barang.idBarang})}"
+                                               onclick="return confirm('Yakin ingin menghapus barang ini?')"
+                                               class="pos-btn-danger">
+                                                Hapus
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${daftarBarang.size() == 0}">
+                                    <td colspan="5" class="text-center text-slate-500 py-10">
+                                        Belum ada data barang.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Transaksi POS')}"></head>
+<body>
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'transaksi')}"></aside>
+
+        <main class="flex-1 p-6 md:p-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                    <div>
+                        <p class="text-sm font-semibold text-blue-600">Point of Sale</p>
+                        <h1 class="text-3xl font-bold text-slate-900">Transaksi Kasir POS</h1>
+                        <p class="text-slate-500 mt-1">
+                            Klik produk untuk menambahkan ke keranjang, lalu atur quantity dari panel POS.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="/riwayat-transaksi" class="px-4 py-3 rounded-2xl bg-white border border-slate-200 font-semibold text-slate-700 hover:bg-slate-50">
+                            Riwayat
+                        </a>
+                        <a href="/dashboard" class="pos-btn-primary">
+                            Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <p th:if="${error}" th:text="${error}" class="mb-6 bg-red-50 text-red-600 border border-red-200 rounded-2xl px-5 py-4 font-semibold"></p>
+
+                <div class="grid xl:grid-cols-12 gap-6">
+                    <section class="xl:col-span-8">
+                        <div class="pos-card p-6">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                                <div>
+                                    <h2 class="text-xl font-bold text-slate-900">Daftar Produk</h2>
+                                    <p class="text-sm text-slate-500 mt-1">
+                                        Card produk bisa diklik untuk langsung menambahkan 1 item ke keranjang.
+                                    </p>
+                                </div>
+
+                                <div class="bg-blue-50 text-blue-700 rounded-2xl px-5 py-3 border border-blue-100">
+                                    <p class="text-xs font-bold uppercase tracking-wider">Transaksi</p>
+                                    <p class="font-bold">
+                                        ID #<span th:text="${transaksi.idTransaksi}"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <form th:each="barang : ${daftarBarang}"
+                                      action="/transaksi/tambah-item"
+                                      method="post"
+                                      class="block">
+
+                                    <input type="hidden" name="idBarang" th:value="${barang.idBarang}">
+                                    <input type="hidden" name="qty" value="1">
+
+                                    <button type="submit"
+                                            class="w-full text-left border border-slate-200 rounded-3xl p-5 bg-white hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                            th:disabled="${barang.stok <= 0}">
+
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-4">
+                                                <span th:text="${#strings.substring(barang.namaBarang, 0, 1)}"></span>
+                                            </div>
+
+                                            <span class="pos-badge"
+                                                  th:classappend="${barang.stok > 10} ? ' badge-green' : ' badge-orange'"
+                                                  th:text="${barang.stok > 0 ? 'Stok ' + barang.stok : 'Habis'}">
+                                            </span>
+                                        </div>
+
+                                        <h3 class="text-lg font-bold text-slate-900" th:text="${barang.namaBarang}"></h3>
+
+                                        <p class="text-2xl font-bold text-blue-700 mt-3"
+                                           th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(barang.harga)}">
+                                        </p>
+
+                                        <div class="mt-5 flex items-center justify-between">
+                                            <p class="text-sm font-semibold text-slate-500">
+                                                Tap untuk tambah
+                                            </p>
+
+                                            <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
+                                                +
+                                            </div>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="xl:col-span-4">
+                        <div class="pos-card overflow-hidden sticky top-6">
+                            <div class="bg-slate-950 text-white p-6">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div>
+                                        <p class="text-sm font-semibold text-blue-400">Keranjang POS</p>
+                                        <h2 class="text-2xl font-bold mt-1">Order Aktif</h2>
+                                    </div>
+
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Tanggal</p>
+                                        <p class="font-bold" th:text="${transaksi.tanggal}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                                    <div th:each="item : ${transaksi.daftarItem}" class="border border-slate-200 rounded-2xl p-4">
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-900" th:text="${item.barang.namaBarang}"></p>
+                                                <p class="text-sm text-slate-500 mt-1"
+                                                   th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)} + ' / pcs'">
+                                                </p>
+                                            </div>
+
+                                            <a th:href="@{/transaksi/hapus-item/{idItem}(idItem=${item.idItem})}"
+                                               onclick="return confirm('Yakin ingin menghapus item ini dari transaksi?')"
+                                               class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold hover:bg-red-100">
+                                                ×
+                                            </a>
+                                        </div>
+
+                                        <div class="flex items-center justify-between mt-4">
+                                            <div class="flex items-center gap-2">
+                                                <a th:href="@{/transaksi/item/{idItem}/kurang(idItem=${item.idItem})}"
+                                                   class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold hover:bg-slate-200">
+                                                    -
+                                                </a>
+
+                                                <div class="min-w-12 h-9 px-3 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                                                    <span th:text="${item.qty}"></span>
+                                                </div>
+
+                                                <a th:href="@{/transaksi/item/{idItem}/tambah(idItem=${item.idItem})}"
+                                                   class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold hover:bg-blue-700">
+                                                    +
+                                                </a>
+                                            </div>
+
+                                            <p class="font-bold text-blue-700"
+                                               th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}">
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div th:if="${transaksi.daftarItem.size() == 0}" class="text-center py-12">
+                                        <div class="w-16 h-16 rounded-3xl bg-slate-100 mx-auto flex items-center justify-center text-2xl mb-4">
+                                            🛒
+                                        </div>
+                                        <p class="font-bold text-slate-800">Keranjang masih kosong</p>
+                                        <p class="text-sm text-slate-500 mt-1">Klik produk untuk mulai transaksi.</p>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-slate-200 mt-6 pt-6 space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-slate-500 font-semibold">Total Item</p>
+                                        <p class="font-bold text-slate-900">
+                                            <span th:text="${transaksi.daftarItem.size()}"></span> produk
+                                        </p>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-slate-500 font-semibold">Total Bayar</p>
+                                        <p class="text-2xl font-bold text-blue-700"
+                                           th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}">
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <form action="/transaksi/simpan" method="post" class="mt-6 space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Uang Dibayar</label>
+                                        <input type="number" name="uangDibayar" class="pos-input" placeholder="Masukkan nominal pembayaran" required>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-bold transition"
+                                            th:disabled="${transaksi.daftarItem.size() == 0}"
+                                            th:classappend="${transaksi.daftarItem.size() == 0} ? ' opacity-50 cursor-not-allowed' : ''">
+                                        Proses Pembayaran
+                                    </button>
+                                </form>
+
+                                <div class="mt-4 grid grid-cols-2 gap-3">
+                                    <a href="/riwayat-transaksi" class="text-center px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700 hover:bg-slate-200">
+                                        Riwayat
+                                    </a>
+
+                                    <a href="/laporan" class="text-center px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700 hover:bg-slate-200">
+                                        Laporan
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

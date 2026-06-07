@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detail Transaksi')}"></head>
+<body>
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'riwayat')}"></aside>
+
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                    <div>
+                        <p class="text-sm font-semibold text-blue-600">Transaction Detail</p>
+                        <h1 class="text-3xl font-bold text-slate-900">Detail Transaksi</h1>
+                        <p class="text-slate-500 mt-1">Informasi lengkap item pada transaksi.</p>
+                    </div>
+
+                    <a href="/riwayat-transaksi" class="px-4 py-3 rounded-2xl bg-white border border-slate-200 font-semibold text-slate-700 hover:bg-slate-50">
+                        Kembali
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="pos-card p-5">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">ID Transaksi</p>
+                        <p class="text-2xl font-bold text-slate-900" th:text="${transaksi.idTransaksi}"></p>
+                    </div>
+
+                    <div class="pos-card p-5">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal</p>
+                        <p class="text-2xl font-bold text-slate-900" th:text="${transaksi.tanggal}"></p>
+                    </div>
+
+                    <div class="pos-card p-5">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Bayar</p>
+                        <p class="text-2xl font-bold text-blue-700" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></p>
+                    </div>
+                </div>
+
+                <div class="pos-card overflow-hidden">
+                    <div class="p-6 border-b border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-900">Daftar Barang Dibeli</h2>
+                        <p class="text-slate-500 text-sm mt-1">Rincian barang, jumlah, dan subtotal pada transaksi ini.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="pos-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Harga</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr th:each="item : ${transaksi.daftarItem}">
+                                    <td class="font-semibold" th:text="${item.barang.namaBarang}"></td>
+                                    <td th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)}"></td>
+                                    <td>
+                                        <span class="pos-badge badge-blue" th:text="${item.qty + ' pcs'}"></span>
+                                    </td>
+                                    <td class="font-bold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a href="/transaksi" class="pos-btn-primary">Transaksi Baru</a>
+                    <a href="/dashboard" class="px-4 py-3 rounded-2xl bg-white border border-slate-200 font-semibold text-slate-700 hover:bg-slate-50">
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
