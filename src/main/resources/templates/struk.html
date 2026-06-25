@@ -1,78 +1,202 @@
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Struk Transaksi')}"></head>
-<body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Struk #' + ${transaksi.idTransaksi} + ' - KasirPro'">Struk Transaksi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #f1f5f9; 
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .receipt-font {
+            font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+        .receipt-paper {
+            background-color: #ffffff;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background-image: 
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,.5) 50%),
+                linear-gradient(rgba(240, 240, 240, 0.5) 1px, transparent 1px);
+            background-size: 100% 4px, 100% 4px;
+        }
+        .receipt-paper::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: radial-gradient(circle at 10px 0, transparent 10px, #ffffff 11px);
+            background-size: 20px 10px;
+            background-repeat: repeat-x;
+        }
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: radial-gradient(circle at 10px 10px, transparent 10px, #ffffff 11px);
+            background-size: 20px 10px;
+            background-repeat: repeat-x;
+        }
+        .dotted-line {
+            border-bottom: 2px dashed #cbd5e1;
+            margin: 16px 0;
+        }
+        
+        @media print {
+            body { 
+                background-color: white; 
+                margin: 0;
+                padding: 0;
+            }
+            .receipt-paper { 
+                box-shadow: none; 
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+                background-image: none;
+            }
+            .receipt-paper::before, .receipt-paper::after { display: none; }
+            .no-print { display: none !important; }
+            .dotted-line { border-bottom: 2px dashed #000; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-12 px-6">
 
-    <div class="min-h-screen flex items-center justify-center p-6">
-        <div class="w-full max-w-3xl pos-card overflow-hidden">
-            <div class="bg-slate-950 text-white p-8">
-                <p class="text-sm font-semibold text-blue-400">Payment Success</p>
-                <h1 class="text-3xl font-bold mt-1">Struk Transaksi</h1>
-                <p class="text-slate-400 mt-2">Transaksi berhasil disimpan ke riwayat.</p>
+    <div class="w-full max-w-sm flex flex-col items-center">
+        
+        <!-- Action Buttons (No Print) -->
+        <div class="no-print flex gap-3 mb-10">
+            <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-slate-800 text-white font-semibold hover:bg-slate-700 transition flex items-center gap-2 shadow-lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Cetak Struk
+            </button>
+            <a href="/transaksi" class="px-5 py-2.5 rounded-xl bg-white text-slate-700 border border-slate-200 font-semibold hover:bg-slate-50 transition shadow-sm">
+                Transaksi Baru
+            </a>
+        </div>
+
+        <!-- The Receipt -->
+        <div class="receipt-paper w-full p-8 text-slate-800 receipt-font text-sm">
+            
+            <!-- Store Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-extrabold mb-1 tracking-tight">KASIR PRO</h1>
+                <p class="text-xs text-slate-500">Jl. Teknologi No. 123, Kota Digital</p>
+                <p class="text-xs text-slate-500">Telp: (021) 555-1234</p>
             </div>
 
-            <div class="p-8 bg-white">
-                <div class="grid md:grid-cols-2 gap-4 mb-8">
-                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">ID Transaksi</p>
-                        <p class="text-xl font-bold text-slate-900" th:text="${transaksi.idTransaksi}"></p>
-                    </div>
+            <div class="dotted-line"></div>
 
-                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal</p>
-                        <p class="text-xl font-bold text-slate-900" th:text="${transaksi.tanggal}"></p>
-                    </div>
+            <!-- Transaction Info -->
+            <div class="mb-4 text-xs font-semibold">
+                <div class="flex justify-between mb-1">
+                    <span>No. Nota:</span>
+                    <span th:text="'#' + ${transaksi.idTransaksi}"></span>
                 </div>
-
-                <div class="border border-slate-200 rounded-3xl overflow-hidden mb-8">
-                    <table class="pos-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Barang</th>
-                                <th>Harga</th>
-                                <th>Qty</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr th:each="item : ${transaksi.daftarItem}">
-                                <td class="font-semibold" th:text="${item.barang.namaBarang}"></td>
-                                <td th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)}"></td>
-                                <td th:text="${item.qty}"></td>
-                                <td class="font-bold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="flex justify-between mb-1">
+                    <span>Tanggal:</span>
+                    <span th:text="${transaksi.tanggal}"></span>
                 </div>
-
-                <div class="grid md:grid-cols-3 gap-4">
-                    <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
-                        <p class="text-xs font-bold text-blue-500 uppercase tracking-wider">Total Bayar</p>
-                        <p class="text-2xl font-bold text-blue-700" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></p>
-                    </div>
-
-                    <div class="bg-orange-50 rounded-2xl p-5 border border-orange-100">
-                        <p class="text-xs font-bold text-orange-500 uppercase tracking-wider">Uang Dibayar</p>
-                        <p class="text-2xl font-bold text-orange-700" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(uangDibayar)}"></p>
-                    </div>
-
-                    <div class="bg-green-50 rounded-2xl p-5 border border-green-100">
-                        <p class="text-xs font-bold text-green-500 uppercase tracking-wider">Kembalian</p>
-                        <p class="text-2xl font-bold text-green-700" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(kembalian)}"></p>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap gap-3 mt-8">
-                    <a href="/transaksi" class="pos-btn-primary">Transaksi Baru</a>
-                    <a href="/riwayat-transaksi" class="px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700">
-                        Riwayat Transaksi
-                    </a>
-                    <a href="/dashboard" class="px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700">
-                        Dashboard
-                    </a>
+                <div class="flex justify-between">
+                    <span>Kasir:</span>
+                    <span>Admin/Kasir</span>
                 </div>
             </div>
+
+            <div class="dotted-line"></div>
+
+            <!-- Items -->
+            <div class="space-y-3 mb-4">
+                <div th:each="item : ${transaksi.daftarItem}">
+                    <div class="flex justify-between font-bold mb-1">
+                        <span th:text="${item.barang.namaBarang}"></span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-600">
+                        <span th:text="${item.qty} + ' x ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)}"></span>
+                        <span class="font-bold text-slate-800" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dotted-line"></div>
+
+            <!-- Totals -->
+            <div class="space-y-2 mb-6">
+                <div class="flex justify-between text-xs font-bold text-slate-600">
+                    <span>Subtotal:</span>
+                    <span th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar + transaksi.diskon - transaksi.pajakPpn)}"></span>
+                </div>
+                <div th:if="${transaksi.diskon > 0}" class="flex justify-between text-xs font-bold text-green-600">
+                    <span>Diskon:</span>
+                    <span th:text="'- ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.diskon)}"></span>
+                </div>
+                <div th:if="${transaksi.pajakPpn > 0}" class="flex justify-between text-xs font-bold text-rose-600">
+                    <span>Pajak (<span th:text="${transaksi.toko.persentasePajak}"></span>%):</span>
+                    <span th:text="'+ ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.pajakPpn)}"></span>
+                </div>
+                <div class="flex justify-between text-base font-extrabold mt-2 pt-2 border-t border-slate-200 border-dashed">
+                    <span>TOTAL:</span>
+                    <span th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></span>
+                </div>
+                <div class="flex justify-between text-sm font-semibold pt-2">
+                    <span>Tunai:</span>
+                    <span th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(uangDibayar)}"></span>
+                </div>
+                <div class="flex justify-between text-sm font-semibold">
+                    <span>Kembali:</span>
+                    <span th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(kembalian)}"></span>
+                </div>
+            </div>
+
+            <div class="dotted-line"></div>
+
+            <!-- Footer -->
+            <div class="text-center mt-6">
+                <p class="text-xs font-bold mb-1">TERIMA KASIH</p>
+                <p class="text-[10px] text-slate-500">Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
+                
+                <div class="mt-4 opacity-50 flex justify-center">
+                    <!-- Fake Barcode -->
+                    <svg class="h-10 w-48" preserveAspectRatio="none" viewBox="0 0 100 20">
+                        <rect x="0" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="4" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="7" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="12" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="15" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="22" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="26" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="29" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="33" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="36" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="42" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="46" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="53" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="56" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="60" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="65" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="68" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="73" y="0" width="4" height="20" fill="currentColor"/>
+                        <rect x="80" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="83" y="0" width="3" height="20" fill="currentColor"/>
+                        <rect x="88" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="92" y="0" width="1" height="20" fill="currentColor"/>
+                        <rect x="95" y="0" width="2" height="20" fill="currentColor"/>
+                        <rect x="99" y="0" width="1" height="20" fill="currentColor"/>
+                    </svg>
+                </div>
+                <p class="text-[9px] mt-1 tracking-widest text-slate-400" th:text="${transaksi.idTransaksi}"></p>
+            </div>
+            
         </div>
     </div>
 

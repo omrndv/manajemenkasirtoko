@@ -1,210 +1,229 @@
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Transaksi POS')}"></head>
-<body>
+<head th:replace="~{fragments/layout :: head('Mesin Kasir POS')}"></head>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
 
-    <div class="min-h-screen">
+    <div class="min-h-screen flex">
         <aside th:replace="~{fragments/layout :: sidebar(${user}, 'transaksi')}"></aside>
 
-        <main class="flex-1 p-6 md:p-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-                    <div>
-                        <p class="text-sm font-semibold text-blue-600">Point of Sale</p>
-                        <h1 class="text-3xl font-bold text-slate-900">Transaksi Kasir POS</h1>
-                        <p class="text-slate-500 mt-1">
-                            Klik produk untuk menambahkan ke keranjang, lalu atur quantity dari panel POS.
-                        </p>
+        <main class="flex-1 md:ml-72 p-4 md:p-6 lg:p-8 h-screen overflow-hidden flex flex-col animate-fade-in-up">
+            
+            <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 shrink-0 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <p class="text-sm font-bold text-indigo-600 uppercase tracking-wider">Point of Sale</p>
                     </div>
-
-                    <div class="flex flex-wrap gap-3">
-                        <a href="/riwayat-transaksi" class="px-4 py-3 rounded-2xl bg-white border border-slate-200 font-semibold text-slate-700 hover:bg-slate-50">
-                            Riwayat
-                        </a>
-                        <a href="/dashboard" class="pos-btn-primary">
-                            Dashboard
-                        </a>
-                    </div>
+                    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Mesin Kasir</h1>
                 </div>
+                <a href="/riwayat-transaksi" class="px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-white transition shadow-sm text-center">
+                    Riwayat Transaksi
+                </a>
+            </header>
 
-                <p th:if="${error}" th:text="${error}" class="mb-6 bg-red-50 text-red-600 border border-red-200 rounded-2xl px-5 py-4 font-semibold"></p>
+            <p th:if="${error}" th:text="${error}" class="mb-4 bg-red-50 text-red-600 border border-red-200 rounded-xl px-4 py-3 text-sm font-bold shadow-sm shrink-0"></p>
 
-                <div class="grid xl:grid-cols-12 gap-6">
-                    <section class="xl:col-span-8">
-                        <div class="pos-card p-6">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                                <div>
-                                    <h2 class="text-xl font-bold text-slate-900">Daftar Produk</h2>
-                                    <p class="text-sm text-slate-500 mt-1">
-                                        Card produk bisa diklik untuk langsung menambahkan 1 item ke keranjang.
-                                    </p>
-                                </div>
-
-                                <div class="bg-blue-50 text-blue-700 rounded-2xl px-5 py-3 border border-blue-100">
-                                    <p class="text-xs font-bold uppercase tracking-wider">Transaksi</p>
-                                    <p class="font-bold">
-                                        ID #<span th:text="${transaksi.idTransaksi}"></span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <form th:each="barang : ${daftarBarang}"
-                                      action="/transaksi/tambah-item"
-                                      method="post"
-                                      class="block">
-
-                                    <input type="hidden" name="idBarang" th:value="${barang.idBarang}">
-                                    <input type="hidden" name="qty" value="1">
-
-                                    <button type="submit"
-                                            class="w-full text-left border border-slate-200 rounded-3xl p-5 bg-white hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                                            th:disabled="${barang.stok <= 0}">
-
-                                        <div class="flex items-start justify-between gap-3">
-                                            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-4">
-                                                <span th:text="${#strings.substring(barang.namaBarang, 0, 1)}"></span>
-                                            </div>
-
-                                            <span class="pos-badge"
-                                                  th:classappend="${barang.stok > 10} ? ' badge-green' : ' badge-orange'"
-                                                  th:text="${barang.stok > 0 ? 'Stok ' + barang.stok : 'Habis'}">
-                                            </span>
-                                        </div>
-
-                                        <h3 class="text-lg font-bold text-slate-900" th:text="${barang.namaBarang}"></h3>
-
-                                        <p class="text-2xl font-bold text-blue-700 mt-3"
-                                           th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(barang.harga)}">
-                                        </p>
-
-                                        <div class="mt-5 flex items-center justify-between">
-                                            <p class="text-sm font-semibold text-slate-500">
-                                                Tap untuk tambah
-                                            </p>
-
-                                            <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
-                                                +
-                                            </div>
-                                        </div>
-                                    </button>
-                                </form>
-                            </div>
+            <div id="pos-container" class="grid lg:grid-cols-12 gap-6 flex-1 min-h-0">
+                <!-- Kiri: Daftar Produk -->
+                <section class="lg:col-span-8 flex flex-col min-h-0 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <span class="text-xl">📋</span> Menu Produk
+                        </h2>
+                        <div class="bg-white text-indigo-700 rounded-lg px-3 py-1.5 border border-slate-200 shadow-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
+                            <p class="text-xs font-bold uppercase tracking-widest">ID: #<span th:text="${transaksi.idTransaksi}"></span></p>
                         </div>
-                    </section>
+                    </div>
 
-                    <section class="xl:col-span-4">
-                        <div class="pos-card overflow-hidden sticky top-6">
-                            <div class="bg-slate-950 text-white p-6">
-                                <div class="flex items-center justify-between gap-4">
-                                    <div>
-                                        <p class="text-sm font-semibold text-blue-400">Keranjang POS</p>
-                                        <h2 class="text-2xl font-bold mt-1">Order Aktif</h2>
-                                    </div>
+                    <div class="p-5 overflow-y-auto flex-1 custom-scrollbar">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                            <form th:each="barang : ${daftarBarang}"
+                                  action="/transaksi/tambah-item"
+                                  method="post"
+                                  class="ajax-form block h-full">
 
-                                    <div class="text-right">
-                                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Tanggal</p>
-                                        <p class="font-bold" th:text="${transaksi.tanggal}"></p>
-                                    </div>
-                                </div>
-                            </div>
+                                <input type="hidden" name="idBarang" th:value="${barang.idBarang}">
+                                <input type="hidden" name="qty" value="1">
 
-                            <div class="p-6">
-                                <div class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
-                                    <div th:each="item : ${transaksi.daftarItem}" class="border border-slate-200 rounded-2xl p-4">
-                                        <div class="flex items-start justify-between gap-3">
-                                            <div class="flex-1">
-                                                <p class="font-bold text-slate-900" th:text="${item.barang.namaBarang}"></p>
-                                                <p class="text-sm text-slate-500 mt-1"
-                                                   th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)} + ' / pcs'">
-                                                </p>
-                                            </div>
+                                <button type="submit"
+                                        class="w-full h-full text-left bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-0.5 hover:border-indigo-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group flex flex-col"
+                                        th:disabled="${barang.stok <= 0}">
 
-                                            <a th:href="@{/transaksi/hapus-item/{idItem}(idItem=${item.idItem})}"
-                                               onclick="return confirm('Yakin ingin menghapus item ini dari transaksi?')"
-                                               class="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold hover:bg-red-100">
-                                                ×
-                                            </a>
+                                    <!-- Image Container -->
+                                    <div class="w-full aspect-[4/3] bg-slate-100 relative overflow-hidden shrink-0 border-b border-slate-100">
+                                        <img th:if="${barang.gambar != null && !#strings.isEmpty(barang.gambar)}" th:src="${barang.gambar}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        <div th:if="${barang.gambar == null || #strings.isEmpty(barang.gambar)}" class="w-full h-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-2xl group-hover:bg-indigo-100 transition-colors">
+                                            <span th:text="${#strings.substring(barang.namaBarang, 0, 1)}"></span>
                                         </div>
+                                        
+                                        <!-- Stock Badge overlay -->
+                                        <span class="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shadow-sm"
+                                              th:classappend="${barang.stok > 10} ? 'bg-emerald-500 text-white' : 'bg-orange-500 text-white'"
+                                              th:text="${barang.stok > 0 ? 'Stok ' + barang.stok : 'Habis'}">
+                                        </span>
+                                    </div>
 
-                                        <div class="flex items-center justify-between mt-4">
-                                            <div class="flex items-center gap-2">
-                                                <a th:href="@{/transaksi/item/{idItem}/kurang(idItem=${item.idItem})}"
-                                                   class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold hover:bg-slate-200">
-                                                    -
-                                                </a>
-
-                                                <div class="min-w-12 h-9 px-3 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
-                                                    <span th:text="${item.qty}"></span>
-                                                </div>
-
-                                                <a th:href="@{/transaksi/item/{idItem}/tambah(idItem=${item.idItem})}"
-                                                   class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold hover:bg-blue-700">
-                                                    +
-                                                </a>
-                                            </div>
-
-                                            <p class="font-bold text-blue-700"
-                                               th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}">
+                                    <!-- Card Body -->
+                                    <div class="p-3.5 flex flex-col flex-1 w-full">
+                                        <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug mb-1.5 min-h-[2rem]" th:text="${barang.namaBarang}"></h3>
+                                        <div class="mt-auto">
+                                            <p class="text-sm font-black text-indigo-600"
+                                               th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(barang.harga)}">
                                             </p>
                                         </div>
                                     </div>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
 
-                                    <div th:if="${transaksi.daftarItem.size() == 0}" class="text-center py-12">
-                                        <div class="w-16 h-16 rounded-3xl bg-slate-100 mx-auto flex items-center justify-center text-2xl mb-4">
-                                            🛒
+                <!-- Kanan: Keranjang / Cart -->
+                <section class="lg:col-span-4 flex flex-col min-h-0 bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden relative">
+                    <div class="bg-indigo-600 text-white p-5 shrink-0 relative overflow-hidden flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight">Order Aktif</h2>
+                            <p class="text-xs text-indigo-200 mt-0.5 font-medium" th:text="${transaksi.tanggal}"></p>
+                        </div>
+                        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50">
+                        <div class="space-y-3">
+                            <div th:each="item : ${transaksi.daftarItem}" class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm hover:border-indigo-300 transition">
+                                <div class="flex justify-between gap-2 mb-2">
+                                    <p class="font-bold text-slate-800 text-sm leading-tight pr-4" th:text="${item.barang.namaBarang}"></p>
+                                    <a th:href="@{/transaksi/hapus-item/{idItem}(idItem=${item.idItem})}"
+                                       class="ajax-action w-6 h-6 rounded-md bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition shrink-0">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </a>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+                                        <a th:href="@{/transaksi/item/{idItem}/kurang(idItem=${item.idItem})}"
+                                           class="ajax-action w-7 h-7 rounded-md text-slate-600 flex items-center justify-center font-bold hover:bg-white hover:shadow-sm transition">
+                                            -
+                                        </a>
+                                        <div class="w-8 text-center text-sm font-bold text-slate-800">
+                                            <span th:text="${item.qty}"></span>
                                         </div>
-                                        <p class="font-bold text-slate-800">Keranjang masih kosong</p>
-                                        <p class="text-sm text-slate-500 mt-1">Klik produk untuk mulai transaksi.</p>
+                                        <a th:href="@{/transaksi/item/{idItem}/tambah(idItem=${item.idItem})}"
+                                           class="ajax-action w-7 h-7 rounded-md text-indigo-600 flex items-center justify-center font-bold hover:bg-white hover:shadow-sm transition">
+                                            +
+                                        </a>
                                     </div>
-                                </div>
-
-                                <div class="border-t border-slate-200 mt-6 pt-6 space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-slate-500 font-semibold">Total Item</p>
-                                        <p class="font-bold text-slate-900">
-                                            <span th:text="${transaksi.daftarItem.size()}"></span> produk
-                                        </p>
-                                    </div>
-
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-slate-500 font-semibold">Total Bayar</p>
-                                        <p class="text-2xl font-bold text-blue-700"
-                                           th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}">
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <form action="/transaksi/simpan" method="post" class="mt-6 space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-semibold text-slate-700 mb-2">Uang Dibayar</label>
-                                        <input type="number" name="uangDibayar" class="pos-input" placeholder="Masukkan nominal pembayaran" required>
-                                    </div>
-
-                                    <button type="submit"
-                                            class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-bold transition"
-                                            th:disabled="${transaksi.daftarItem.size() == 0}"
-                                            th:classappend="${transaksi.daftarItem.size() == 0} ? ' opacity-50 cursor-not-allowed' : ''">
-                                        Proses Pembayaran
-                                    </button>
-                                </form>
-
-                                <div class="mt-4 grid grid-cols-2 gap-3">
-                                    <a href="/riwayat-transaksi" class="text-center px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700 hover:bg-slate-200">
-                                        Riwayat
-                                    </a>
-
-                                    <a href="/laporan" class="text-center px-4 py-3 rounded-2xl bg-slate-100 font-semibold text-slate-700 hover:bg-slate-200">
-                                        Laporan
-                                    </a>
+                                    <p class="font-black text-indigo-600 text-sm"
+                                       th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}">
+                                    </p>
                                 </div>
                             </div>
+
+                            <div th:if="${transaksi.daftarItem.size() == 0}" class="flex flex-col items-center justify-center py-10 opacity-60">
+                                <span class="text-4xl mb-3">🛒</span>
+                                <p class="font-bold text-slate-600">Keranjang Kosong</p>
+                                <p class="text-xs text-slate-500 mt-1">Pilih produk dari menu</p>
+                            </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+
+                    <div class="p-5 border-t border-slate-200 bg-white shrink-0 shadow-sm relative z-10">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-slate-500 text-sm font-semibold">Subtotal (<span th:text="${transaksi.daftarItem.size()}"></span> item)</p>
+                            <p class="font-bold text-slate-800" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar + transaksi.diskon - transaksi.pajakPpn)}"></p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <form action="/transaksi/set-diskon" method="post" class="ajax-form flex gap-2">
+                                <div class="relative flex-1">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">Rp</span>
+                                    <input type="number" name="diskon" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold focus:outline-none focus:ring-1 focus:ring-indigo-500 transition" placeholder="Diskon" th:value="${transaksi.diskon}">
+                                </div>
+                                <button type="submit" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold transition">Terapkan</button>
+                            </form>
+                        </div>
+
+                        <div th:if="${transaksi.pajakPpn > 0}" class="flex items-center justify-between mb-3 border-b border-slate-100 pb-3">
+                            <p class="text-slate-500 text-sm font-semibold">Pajak (<span th:text="${transaksi.toko.persentasePajak}"></span>%)</p>
+                            <p class="font-bold text-rose-500" th:text="'+ ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.pajakPpn)}"></p>
+                        </div>
+                        
+                        <div th:if="${transaksi.pajakPpn == 0}" class="mb-3 border-b border-slate-100 pb-3"></div>
+
+                        <div class="flex items-center justify-between mb-4 mt-2">
+                            <p class="text-slate-800 font-bold text-lg">Total Bayar</p>
+                            <p class="text-2xl font-black text-indigo-600"
+                               th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}">
+                            </p>
+                        </div>
+
+                        <form action="/transaksi/simpan" method="post" class="space-y-3">
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">Rp</span>
+                                <input type="number" name="uangDibayar" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition" placeholder="Nominal Uang" required>
+                            </div>
+                            <button type="submit"
+                                    class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3.5 rounded-xl font-bold text-base shadow-sm transition-colors"
+                                    th:disabled="${transaksi.daftarItem.size() == 0}"
+                                    th:classappend="${transaksi.daftarItem.size() == 0} ? ' opacity-50 cursor-not-allowed' : ''">
+                                Proses Pembayaran
+                            </button>
+                        </form>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
+    <!-- Script to handle AJAX form submissions and links for No-Refresh POS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const posContainer = document.getElementById('pos-container');
+            if (!posContainer) return;
+
+            posContainer.addEventListener("click", async (e) => {
+                const link = e.target.closest("a.ajax-action");
+                if (link) {
+                    e.preventDefault();
+                    await fetchAndReplace(link.href, "GET");
+                }
+            });
+
+            posContainer.addEventListener("submit", async (e) => {
+                const form = e.target.closest("form.ajax-form");
+                if (form) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    await fetchAndReplace(form.action, form.method, formData);
+                }
+            });
+
+            async function fetchAndReplace(url, method, formData = null) {
+                try {
+                    const options = { method: method };
+                    if (formData && method.toUpperCase() === 'POST') {
+                        options.body = formData;
+                    }
+                    const response = await fetch(url, options);
+                    if (response.ok) {
+                        const html = await response.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, "text/html");
+                        const newContainer = doc.getElementById('pos-container');
+                        if (newContainer) {
+                            posContainer.innerHTML = newContainer.innerHTML;
+                        }
+                    } else {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    window.location.reload();
+                }
+            }
+        });
+    </script>
 </body>
 </html>

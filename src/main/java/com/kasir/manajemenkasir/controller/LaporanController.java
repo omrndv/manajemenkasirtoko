@@ -27,14 +27,22 @@ public class LaporanController {
             return "redirect:/dashboard";
         }
 
-        LaporanPenjualan laporan = laporanService.generateLaporanSemua();
+        LaporanPenjualan laporan = laporanService.generateLaporanSemua(user.getToko());
 
         model.addAttribute("user", user);
         model.addAttribute("laporan", laporan);
-        model.addAttribute("totalPenjualan", laporanService.hitungTotalPenjualan());
-        model.addAttribute("jumlahTransaksi", laporanService.hitungJumlahTransaksi());
-        model.addAttribute("barangTerlaris", laporanService.cariBarangTerlaris());
-        model.addAttribute("daftarTransaksi", transaksiService.getAllTransaksi());
+        model.addAttribute("totalPenjualan", laporanService.hitungTotalPenjualan(user.getToko()));
+        model.addAttribute("totalLaba", laporanService.hitungLaba(user.getToko()));
+        model.addAttribute("jumlahTransaksi", laporanService.hitungJumlahTransaksi(user.getToko()));
+        model.addAttribute("barangTerlaris", laporanService.cariBarangTerlaris(user.getToko()));
+        model.addAttribute("daftarTransaksi", transaksiService.getAllTransaksi(user.getToko()));
+        
+        // Advanced reporting metrics
+        model.addAttribute("totalDiskon", laporanService.hitungTotalDiskon(user.getToko()));
+        model.addAttribute("totalPajak", laporanService.hitungTotalPajak(user.getToko()));
+        model.addAttribute("rataRataTransaksi", laporanService.hitungRataRataTransaksi(user.getToko()));
+        model.addAttribute("penjualanBarangList", laporanService.getPenjualanBarangList(user.getToko()));
+        model.addAttribute("penjualanPerKategori", laporanService.getPenjualanPerKategori(user.getToko()));
 
         return "laporan";
     }

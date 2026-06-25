@@ -2,78 +2,131 @@
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login Manajemen Kasir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Kasir Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-auth {
+            background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
+<body class="min-h-screen flex items-center justify-center p-6 bg-slate-50 relative overflow-hidden">
 
-    <div class="w-full max-w-5xl grid md:grid-cols-2 pos-card overflow-hidden">
-        <div class="hidden md:flex flex-col justify-between bg-slate-950 text-white p-10">
-            <div>
-                <div class="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-2xl font-bold mb-8">
+    <!-- Decorative background elements -->
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-700"></div>
+
+    <div class="w-full max-w-5xl grid md:grid-cols-2 pos-card overflow-hidden z-10 animate-fade-in-up">
+        
+        <!-- Left Panel: Information -->
+        <div class="hidden md:flex flex-col justify-between bg-auth text-white p-12 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+            
+            <div class="relative z-10">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-3xl font-bold mb-10 shadow-lg shadow-blue-500/30">
                     K
                 </div>
 
-                <h1 class="text-4xl font-bold leading-tight mb-4">
-                    Sistem Manajemen Kasir Toko
+                <h1 class="text-4xl font-extrabold leading-tight mb-5 tracking-tight">
+                    Tingkatkan <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Efisiensi Toko</span> Anda
                 </h1>
 
-                <p class="text-slate-300 leading-relaxed">
-                    Aplikasi kasir berbasis Java Spring Boot dengan konsep OOP untuk mengelola barang, transaksi, dan laporan penjualan.
+                <p class="text-slate-300 leading-relaxed text-lg font-light">
+                    Sistem manajemen kasir modern dengan fitur lengkap untuk mengelola penjualan, stok, dan laporan dengan mudah dan cepat.
                 </p>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 mt-10">
-                <div class="bg-white/10 rounded-2xl p-4">
-                    <p class="text-2xl font-bold">OOP</p>
-                    <p class="text-xs text-slate-300">Java Based</p>
+            <div class="grid grid-cols-2 gap-4 mt-12 relative z-10">
+                <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <p class="font-semibold">Cepat</p>
+                    <p class="text-xs text-slate-400 mt-1">Transaksi instan</p>
                 </div>
-                <div class="bg-white/10 rounded-2xl p-4">
-                    <p class="text-2xl font-bold">POS</p>
-                    <p class="text-xs text-slate-300">Cashier App</p>
-                </div>
-                <div class="bg-white/10 rounded-2xl p-4">
-                    <p class="text-2xl font-bold">Web</p>
-                    <p class="text-xs text-slate-300">Spring Boot</p>
+                <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <p class="font-semibold">Akurat</p>
+                    <p class="text-xs text-slate-400 mt-1">Laporan detail</p>
                 </div>
             </div>
         </div>
 
-        <div class="p-8 md:p-10 bg-white">
-            <div class="mb-8">
-                <p class="text-sm font-semibold text-blue-600 mb-2">Welcome Back</p>
-                <h2 class="text-3xl font-bold text-slate-900">Login Kasir</h2>
-                <p class="text-slate-500 mt-2">Masuk untuk mengakses dashboard.</p>
+        <!-- Right Panel: Login Form -->
+        <div class="p-8 md:p-12 bg-white flex flex-col justify-center">
+            <div class="mb-10">
+                <p class="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wider">Selamat Datang</p>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Login Kasir</h2>
+                <p class="text-slate-500 mt-2">Masuk ke akun Anda untuk mengelola toko.</p>
             </div>
 
-            <p th:if="${error}" th:text="${error}" class="mb-5 bg-red-50 text-red-600 border border-red-200 rounded-2xl px-4 py-3 text-sm font-semibold"></p>
+            <p th:if="${error}" th:text="${error}" class="mb-6 bg-red-50 text-red-600 border border-red-200 rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            </p>
+            
+            <p th:if="${success}" th:text="${success}" class="mb-6 bg-green-50 text-green-700 border border-green-200 rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            </p>
 
-            <form action="/login" method="post" class="space-y-5">
+            <form action="/login" method="post" class="space-y-6">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
-                    <input type="text" name="username" class="pos-input" placeholder="Masukkan username" required>
+                    <input type="text" name="username" th:value="${rememberedUsername}" class="pos-input" placeholder="Masukkan username" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
-                    <input type="password" name="password" class="pos-input" placeholder="Masukkan password" required>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" class="pos-input pr-10" placeholder="Masukkan password" required>
+                        <button type="button" onclick="togglePassword('password', 'eye-icon-login')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+                            <i id="eye-icon-login" data-lucide="eye" class="w-5 h-5"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full pos-btn-primary py-3">
-                    Login
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                        <input type="checkbox" name="rememberMe" th:checked="${rememberedUsername != null}" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                        Ingat Saya
+                    </label>
+                    <a href="/lupa-password" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">Lupa password?</a>
+                </div>
+
+                <button type="submit" class="w-full pos-btn-primary py-3 text-lg">
+                    Masuk ke Dashboard
                 </button>
             </form>
+            
+            <p class="mt-8 text-center text-sm text-slate-600">
+                Belum memiliki toko? 
+                <a href="/register" class="font-bold text-blue-600 hover:text-blue-800 transition">Daftar Merchant Baru</a>
+            </p>
 
-            <div class="mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5">
-                <p class="font-bold text-slate-800 mb-3">Akun Demo</p>
-                <div class="space-y-2 text-sm text-slate-600">
-                    <p>Admin: <b>admin</b> / <b>admin123</b></p>
-                    <p>Kasir: <b>kasir</b> / <b>kasir123</b></p>
-                </div>
-            </div>
         </div>
     </div>
 
+    <script>
+        lucide.createIcons();
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.setAttribute("data-lucide", "eye-off");
+            } else {
+                input.type = "password";
+                icon.setAttribute("data-lucide", "eye");
+            }
+            lucide.createIcons();
+        }
+    </script>
 </body>
 </html>

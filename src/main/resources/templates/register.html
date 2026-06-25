@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Merchant - Sistem Kasir Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .bg-auth {
+            background: radial-gradient(circle at 0% 100%, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 bg-slate-50 relative overflow-hidden">
+
+    <!-- Decorative background elements -->
+    <div class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-700"></div>
+
+    <div class="w-full max-w-5xl grid md:grid-cols-2 pos-card overflow-hidden z-10 animate-fade-in-up">
+        
+        <!-- Left Panel: Information -->
+        <div class="hidden md:flex flex-col justify-between bg-auth text-white p-12 relative overflow-hidden order-2 md:order-1">
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+            
+            <div class="relative z-10">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-3xl font-bold mb-10 shadow-lg shadow-indigo-500/30">
+                    K
+                </div>
+
+                <h1 class="text-4xl font-extrabold leading-tight mb-5 tracking-tight">
+                    Mulai <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-blue-400">Transformasi Digital</span> Toko Anda
+                </h1>
+
+                <p class="text-slate-300 leading-relaxed text-lg font-light">
+                    Bergabung dengan ribuan merchant lainnya yang telah beralih ke sistem POS modern yang terintegrasi.
+                </p>
+            </div>
+
+            <div class="mt-12 relative z-10">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <p class="text-sm">Manajemen inventaris tak terbatas</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <p class="text-sm">Analisis penjualan real-time</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-slate-300">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <p class="text-sm">Dukungan Multi-role (Admin/Kasir)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Register Form -->
+        <div class="p-8 md:p-12 bg-white flex flex-col justify-center order-1 md:order-2">
+            <div class="mb-8">
+                <p class="text-sm font-semibold text-indigo-600 mb-2 uppercase tracking-wider">Langkah Awal</p>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Daftar Merchant</h2>
+                <p class="text-slate-500 mt-2">Lengkapi data di bawah ini untuk membuat toko baru.</p>
+            </div>
+
+            <p th:if="${error}" th:text="${error}" class="mb-6 bg-red-50 text-red-600 border border-red-200 rounded-xl px-4 py-3 text-sm font-semibold flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+            </p>
+
+            <form action="/register" method="post" class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Pemilik / Admin</label>
+                        <input type="text" name="namaAdmin" class="pos-input" placeholder="Masukkan nama lengkap" required>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Toko / Merchant</label>
+                        <input type="text" name="namaToko" class="pos-input" placeholder="Masukkan nama toko" required>
+                    </div>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
+                        <input type="text" name="username" class="pos-input" placeholder="Pilih username" required>
+                    </div>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" class="pos-input pr-10" placeholder="Buat password" required>
+                            <button type="button" onclick="togglePassword('password', 'eye-icon-register')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+                                <i id="eye-icon-register" data-lucide="eye" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Kontak Toko / Merchant</label>
+                        <input type="text" name="kontak" class="pos-input" placeholder="Nomor telepon atau Email" required>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full pos-btn-primary py-3 text-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700">
+                        Buat Akun Merchant
+                    </button>
+                </div>
+            </form>
+            
+            <p class="mt-8 text-center text-sm text-slate-600">
+                Sudah memiliki akun? 
+                <a href="/login" class="font-bold text-indigo-600 hover:text-indigo-800 transition">Masuk di sini</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.setAttribute("data-lucide", "eye-off");
+            } else {
+                input.type = "password";
+                icon.setAttribute("data-lucide", "eye");
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

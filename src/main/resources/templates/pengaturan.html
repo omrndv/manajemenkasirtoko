@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Pengaturan Toko')}"></head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'pengaturan')}"></aside>
+
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto animate-fade-in-up">
+            <div class="max-w-3xl mx-auto">
+                <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm mb-8">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-slate-500 shadow-[0_0_8px_rgba(100,116,139,0.5)]"></span>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Sistem & Pajak</span>
+                        </div>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Pengaturan Toko</h1>
+                        <p class="text-slate-500 mt-2 text-sm md:text-base">Konfigurasi data merchant dan perhitungan pajak otomatis.</p>
+                    </div>
+                </header>
+
+                <p th:if="${success}" th:text="${success}" class="mb-6 bg-green-50 text-green-700 border border-green-200 rounded-xl px-4 py-3 font-semibold flex items-center gap-2">
+                </p>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <span class="text-xl">⚙️</span> Informasi & Konfigurasi
+                        </h3>
+                    </div>
+
+                    <div class="p-8">
+                        <form action="/pengaturan/simpan" method="post" class="space-y-6">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Nama Toko / Merchant</label>
+                                    <input type="text" name="namaToko" class="pos-input" th:value="${toko.namaToko}" required>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Kontak (Telepon/Email)</label>
+                                    <input type="text" name="kontak" class="pos-input" th:value="${toko.kontak}" required>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Persentase Pajak / PPN (%)</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.01" name="persentasePajak" class="pos-input pr-10" th:value="${toko.persentasePajak}" required>
+                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">%</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-2">Pajak ini akan otomatis ditambahkan pada setiap transaksi Kasir POS.</p>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Alamat Lengkap</label>
+                                    <textarea name="alamat" class="pos-input resize-none h-24" required th:text="${toko.alamat}"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="pt-6 border-t border-slate-100 flex justify-end">
+                                <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-xl shadow-md transition-colors flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                                    Simpan Pengaturan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

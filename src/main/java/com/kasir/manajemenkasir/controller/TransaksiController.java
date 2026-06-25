@@ -4,6 +4,7 @@ import com.kasir.manajemenkasir.model.Transaksi;
 import com.kasir.manajemenkasir.model.User;
 import com.kasir.manajemenkasir.service.BarangService;
 import com.kasir.manajemenkasir.service.TransaksiService;
+import com.kasir.manajemenkasir.service.AktivitasLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class TransaksiController {
     private final TransaksiService transaksiService;
     private final BarangService barangService;
+    private final AktivitasLogService aktivitasLogService;
 
     private Transaksi transaksiAktif;
 
-    public TransaksiController(TransaksiService transaksiService, BarangService barangService) {
+    public TransaksiController(TransaksiService transaksiService, BarangService barangService, AktivitasLogService aktivitasLogService) {
         this.transaksiService = transaksiService;
         this.barangService = barangService;
+        this.aktivitasLogService = aktivitasLogService;
     }
 
     private boolean belumLogin(HttpSession session) {
@@ -32,15 +35,16 @@ public class TransaksiController {
             return "redirect:/";
         }
 
+        User user = (User) session.getAttribute("userLogin");
+
         if (transaksiAktif == null) {
             transaksiAktif = transaksiService.buatTransaksi();
+            transaksiAktif.setToko(user.getToko());
         }
-
-        User user = (User) session.getAttribute("userLogin");
 
         model.addAttribute("user", user);
         model.addAttribute("transaksi", transaksiAktif);
-        model.addAttribute("daftarBarang", barangService.getAllBarang());
+        model.addAttribute("daftarBarang", barangService.getAllBarang(user.getToko()));
 
         return "transaksi";
     }
@@ -55,20 +59,21 @@ public class TransaksiController {
             return "redirect:/";
         }
 
+        User user = (User) session.getAttribute("userLogin");
+
         if (transaksiAktif == null) {
             transaksiAktif = transaksiService.buatTransaksi();
+            transaksiAktif.setToko(user.getToko());
         }
 
         try {
             transaksiService.tambahItemKeTransaksi(transaksiAktif, idBarang, qty);
             return "redirect:/transaksi";
         } catch (IllegalArgumentException e) {
-            User user = (User) session.getAttribute("userLogin");
-
             model.addAttribute("user", user);
             model.addAttribute("error", e.getMessage());
             model.addAttribute("transaksi", transaksiAktif);
-            model.addAttribute("daftarBarang", barangService.getAllBarang());
+            model.addAttribute("daftarBarang", barangService.getAllBarang(user.getToko()));
 
             return "transaksi";
         }
@@ -87,14 +92,17 @@ public class TransaksiController {
             return "redirect:/transaksi";
         }
 
+        User user = (User) session.getAttribute("userLogin");
+
         try {
             double kembalian = transaksiService.hitungKembalian(transaksiAktif, uangDibayar);
-            transaksiService.simpanTransaksi(transaksiAktif);
+            transaksiAktif.setUangDibayar(uangDibayar);
+            Transaksi savedTransaksi = transaksiService.simpanTransaksi(transaksiAktif);
 
-            User user = (User) session.getAttribute("userLogin");
+            aktivitasLogService.log(user, "Melakukan transaksi penjualan #" + savedTransaksi.getIdTransaksi() + " (Total: Rp " + savedTransaksi.getTotalBayar() + ")");
 
             model.addAttribute("user", user);
-            model.addAttribute("transaksi", transaksiAktif);
+            model.addAttribute("transaksi", savedTransaksi);
             model.addAttribute("uangDibayar", uangDibayar);
             model.addAttribute("kembalian", kembalian);
 
@@ -102,12 +110,10 @@ public class TransaksiController {
 
             return "struk";
         } catch (IllegalArgumentException e) {
-            User user = (User) session.getAttribute("userLogin");
-
             model.addAttribute("user", user);
             model.addAttribute("error", e.getMessage());
             model.addAttribute("transaksi", transaksiAktif);
-            model.addAttribute("daftarBarang", barangService.getAllBarang());
+            model.addAttribute("daftarBarang", barangService.getAllBarang(user.getToko()));
 
             return "transaksi";
         }
@@ -122,7 +128,7 @@ public class TransaksiController {
         User user = (User) session.getAttribute("userLogin");
 
         model.addAttribute("user", user);
-        model.addAttribute("daftarTransaksi", transaksiService.getAllTransaksi());
+        model.addAttribute("daftarTransaksi", transaksiService.getAllTransaksi(user.getToko()));
 
         return "riwayat-transaksi";
     }
@@ -199,6 +205,20 @@ public class TransaksiController {
             transaksiService.kurangQtyItem(transaksiAktif, idItem);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+        }
+
+        return "redirect:/transaksi";
+    }
+
+    @PostMapping("/transaksi/set-diskon")
+    public String setDiskon(@RequestParam double diskon, HttpSession session) {
+        if (belumLogin(session)) {
+            return "redirect:/";
+        }
+
+        if (transaksiAktif != null) {
+            transaksiAktif.setDiskon(diskon);
+            transaksiAktif.hitungTotal();
         }
 
         return "redirect:/transaksi";

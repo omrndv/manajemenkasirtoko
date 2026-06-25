@@ -2,38 +2,35 @@ package com.kasir.manajemenkasir.service;
 
 import com.kasir.manajemenkasir.model.Barang;
 import com.kasir.manajemenkasir.model.ItemTransaksi;
+import com.kasir.manajemenkasir.model.Toko;
 import com.kasir.manajemenkasir.model.Transaksi;
+import com.kasir.manajemenkasir.repository.TransaksiRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TransaksiService {
-    private final List<Transaksi> daftarTransaksi = new ArrayList<>();
+    private final TransaksiRepository transaksiRepository;
     private final BarangService barangService;
 
-    public TransaksiService(BarangService barangService) {
+    public TransaksiService(TransaksiRepository transaksiRepository, BarangService barangService) {
+        this.transaksiRepository = transaksiRepository;
         this.barangService = barangService;
     }
 
-    public List<Transaksi> getAllTransaksi() {
-        return daftarTransaksi;
+    public List<Transaksi> getAllTransaksi(Toko toko) {
+        return transaksiRepository.findByToko(toko);
     }
 
     public Transaksi getTransaksiById(int idTransaksi) {
-        for (Transaksi transaksi : daftarTransaksi) {
-            if (transaksi.getIdTransaksi() == idTransaksi) {
-                return transaksi;
-            }
-        }
-
-        return null;
+        return transaksiRepository.findById(idTransaksi).orElse(null);
     }
 
     public Transaksi buatTransaksi() {
-        int idBaru = daftarTransaksi.size() + 1;
+        int idBaru = (int) (transaksiRepository.count() + 1);
         String tanggalHariIni = LocalDate.now().toString();
 
         return new Transaksi(idBaru, tanggalHariIni);
@@ -72,14 +69,22 @@ public class TransaksiService {
             throw new IllegalArgumentException("Jumlah barang harus lebih dari 0.");
         }
 
-        if (barang.getStok() < qty) {
+        int qtySudahAda = 0;
+        for (ItemTransaksi item : transaksi.getDaftarItem()) {
+            if (item.getBarang().getIdBarang() == idBarang) {
+                qtySudahAda = item.getQty();
+                break;
+            }
+        }
+
+        if (barang.getStok() < (qty + qtySudahAda)) {
             throw new IllegalArgumentException("Stok barang tidak mencukupi.");
         }
 
         for (ItemTransaksi item : transaksi.getDaftarItem()) {
             if (item.getBarang().getIdBarang() == idBarang) {
                 item.setQty(item.getQty() + qty);
-                barang.updateStok(qty);
+                item.getBarang().setStok(barang.getStok() - item.getQty());
                 transaksi.hitungTotal();
                 return;
             }
@@ -87,6 +92,7 @@ public class TransaksiService {
 
         int idItemBaru = transaksi.getDaftarItem().size() + 1;
         ItemTransaksi itemBaru = new ItemTransaksi(idItemBaru, barang, qty);
+        barang.setStok(barang.getStok() - qty);
 
         transaksi.tambahItem(itemBaru);
     }
@@ -98,14 +104,17 @@ public class TransaksiService {
 
         for (ItemTransaksi item : transaksi.getDaftarItem()) {
             if (item.getIdItem() == idItem) {
-                Barang barang = item.getBarang();
+                Barang dbBarang = barangService.getBarangById(item.getBarang().getIdBarang());
+                if (dbBarang == null) {
+                    throw new IllegalArgumentException("Barang tidak ditemukan.");
+                }
 
-                if (barang.getStok() <= 0) {
+                if (dbBarang.getStok() < (item.getQty() + 1)) {
                     throw new IllegalArgumentException("Stok barang tidak mencukupi.");
                 }
 
                 item.setQty(item.getQty() + 1);
-                barang.updateStok(1);
+                item.getBarang().setStok(dbBarang.getStok() - item.getQty());
                 transaksi.hitungTotal();
                 return;
             }
@@ -132,19 +141,21 @@ public class TransaksiService {
             throw new IllegalArgumentException("Item transaksi tidak ditemukan.");
         }
 
-        Barang barang = itemDikurangi.getBarang();
-        barang.setStok(barang.getStok() + 1);
-
-        if (itemDikurangi.getQty() <= 1) {
-            transaksi.getDaftarItem().remove(itemDikurangi);
-        } else {
-            itemDikurangi.setQty(itemDikurangi.getQty() - 1);
+        Barang dbBarang = barangService.getBarangById(itemDikurangi.getBarang().getIdBarang());
+        if (dbBarang != null) {
+            if (itemDikurangi.getQty() <= 1) {
+                transaksi.getDaftarItem().remove(itemDikurangi);
+            } else {
+                itemDikurangi.setQty(itemDikurangi.getQty() - 1);
+                itemDikurangi.getBarang().setStok(dbBarang.getStok() - itemDikurangi.getQty());
+            }
         }
 
         transaksi.hitungTotal();
     }
 
-    public void simpanTransaksi(Transaksi transaksi) {
+    @Transactional
+    public Transaksi simpanTransaksi(Transaksi transaksi) {
         if (transaksi == null) {
             throw new IllegalArgumentException("Transaksi tidak boleh kosong.");
         }
@@ -154,8 +165,27 @@ public class TransaksiService {
         }
 
         transaksi.hitungTotal();
-        daftarTransaksi.add(transaksi);
-        transaksi.simpanTransaksi();
+
+        // Update barang stock in database
+        for (ItemTransaksi item : transaksi.getDaftarItem()) {
+            Barang dbBarang = barangService.getBarangById(item.getBarang().getIdBarang());
+            if (dbBarang != null) {
+                dbBarang.setStok(dbBarang.getStok() - item.getQty());
+                barangService.updateBarang(dbBarang.getIdBarang(), dbBarang);
+                item.setBarang(dbBarang);
+            }
+        }
+
+        // Reset IDs for DB generation
+        transaksi.setIdTransaksi(0);
+        for (ItemTransaksi item : transaksi.getDaftarItem()) {
+            item.setIdItem(0);
+            item.setTransaksi(transaksi);
+        }
+
+        Transaksi savedTransaksi = transaksiRepository.save(transaksi);
+        savedTransaksi.simpanTransaksi();
+        return savedTransaksi;
     }
 
     public double hitungKembalian(Transaksi transaksi, double uangDibayar) {
@@ -171,7 +201,7 @@ public class TransaksiService {
     }
 
     public void hapusTransaksi(int idTransaksi) {
-        daftarTransaksi.removeIf(transaksi -> transaksi.getIdTransaksi() == idTransaksi);
+        transaksiRepository.deleteById(idTransaksi);
     }
 
     public void hapusItemDariTransaksi(Transaksi transaksi, int idItem) {
@@ -190,12 +220,6 @@ public class TransaksiService {
 
         if (itemDihapus == null) {
             throw new IllegalArgumentException("Item transaksi tidak ditemukan.");
-        }
-
-        Barang barang = itemDihapus.getBarang();
-
-        if (barang != null) {
-            barang.setStok(barang.getStok() + itemDihapus.getQty());
         }
 
         transaksi.getDaftarItem().remove(itemDihapus);

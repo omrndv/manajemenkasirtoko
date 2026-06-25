@@ -1,8 +1,22 @@
 package com.kasir.manajemenkasir.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "item_transaksi")
 public class ItemTransaksi {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idItem;
+
+    @ManyToOne
+    @JoinColumn(name = "id_barang")
     private Barang barang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_transaksi")
+    private Transaksi transaksi;
+
     private int qty;
     private double subtotal;
 
@@ -56,5 +70,13 @@ public class ItemTransaksi {
 
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Transaksi getTransaksi() {
+        return transaksi;
+    }
+
+    public void setTransaksi(Transaksi transaksi) {
+        this.transaksi = transaksi;
     }
 }

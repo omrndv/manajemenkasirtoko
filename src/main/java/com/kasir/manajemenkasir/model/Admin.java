@@ -1,5 +1,10 @@
 package com.kasir.manajemenkasir.model;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("Admin")
 public class Admin extends User {
     private String namaAdmin;
     private String kontak;

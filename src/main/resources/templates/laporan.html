@@ -1,83 +1,214 @@
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Laporan Penjualan')}"></head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
 
-    <div class="min-h-screen">
+    <div class="min-h-screen flex">
         <aside th:replace="~{fragments/layout :: sidebar(${user}, 'laporan')}"></aside>
 
         <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div class="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+                
+                <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
                     <div>
-                        <p class="text-sm font-semibold text-blue-600">Sales Report</p>
-                        <h1 class="text-3xl font-bold text-slate-900">Laporan Penjualan</h1>
-                        <p class="text-slate-500 mt-1">Pantau total penjualan, jumlah transaksi, dan barang terlaris.</p>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]"></span>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Analytics & Report</span>
+                        </div>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Laporan Penjualan</h1>
+                        <p class="text-slate-500 mt-2 text-sm md:text-base">Pantau performa bisnis, total pendapatan, dan analitik produk Anda.</p>
                     </div>
 
-                    <a href="/transaksi" class="pos-btn-primary">
+                    <a href="/transaksi" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-xl shadow-sm transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Transaksi Baru
                     </a>
+                </header>
+
+                <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-gradient-to-br from-white to-blue-50 p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-blue-500">
+                        <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <p class="text-sm font-bold text-blue-700 uppercase tracking-wider mb-1">Keuntungan Bersih</p>
+                        <h3 class="text-3xl font-black text-blue-800" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalLaba)}"></h3>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-emerald-50 p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-emerald-500">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-sm font-bold text-emerald-700 uppercase tracking-wider mb-1">Total Pendapatan</p>
+                        <h3 class="text-3xl font-black text-emerald-800" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPenjualan)}"></h3>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-blue-500">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Jumlah Transaksi</p>
+                        <h3 class="text-3xl font-black text-slate-900" th:text="${jumlahTransaksi}"></h3>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-white to-orange-50 p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-orange-500">
+                        <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        </div>
+                        <p class="text-sm font-bold text-orange-700 uppercase tracking-wider mb-1">Produk Terlaris</p>
+                        <h3 class="text-2xl font-black text-orange-800 line-clamp-1" th:text="${barangTerlaris}"></h3>
+                    </div>
+                </section>
+
+                <!-- Secondary Metrics Cards -->
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-indigo-500">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Rata-rata Transaksi</p>
+                                <h4 class="text-xl font-black text-slate-800 mt-0.5" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(rataRataTransaksi)}"></h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-rose-500">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Diskon Diberikan</p>
+                                <h4 class="text-xl font-black text-rose-600 mt-0.5" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalDiskon)}"></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-emerald-500">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pajak PPN</p>
+                                <h4 class="text-xl font-black text-emerald-700 mt-0.5" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPajak)}"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Analytics Breakdown Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up">
+                    <!-- Left: Category Performance -->
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                                <span>📁</span> Performa per Kategori
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">Distribusi omset pendapatan berdasarkan kategori produk.</p>
+                        </div>
+                        <div class="p-6 flex-1">
+                            <div class="space-y-5" th:if="${penjualanPerKategori.size() > 0}">
+                                <div th:each="entry : ${penjualanPerKategori}" class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-sm font-semibold">
+                                        <span class="text-slate-700 font-bold" th:text="${entry.key}"></span>
+                                        <span class="text-indigo-600 font-extrabold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(entry.value)}"></span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                                        <div class="bg-indigo-600 h-full rounded-full transition-all" th:style="'width: ' + ${totalPenjualan > 0 ? (entry.value / totalPenjualan * 100) : 0} + '%'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${penjualanPerKategori.size() == 0}" class="py-12 text-center text-slate-400 text-sm font-medium">
+                                <span class="text-2xl block mb-2">📭</span> Belum ada data penjualan per kategori
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Right: Top Products Leaderboard -->
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                                <span>🏆</span> Peringkat Produk Terlaris
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">Daftar produk dengan volume penjualan tertinggi.</p>
+                        </div>
+                        <div class="p-6 flex-1">
+                            <div class="divide-y divide-slate-100" th:if="${penjualanBarangList.size() > 0}">
+                                <div th:each="entry, iter : ${penjualanBarangList}" class="py-3 flex items-center justify-between first:pt-0 last:pb-0">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px]"
+                                              th:classappend="${iter.index == 0} ? 'bg-amber-100 text-amber-700 border border-amber-200' : (${iter.index == 1} ? 'bg-slate-100 text-slate-700 border border-slate-200' : (${iter.index == 2} ? 'bg-orange-100 text-orange-700 border border-orange-200' : 'bg-slate-50 text-slate-500 border border-slate-100'))"
+                                              th:text="${iter.index + 1}">
+                                        </span>
+                                        <span class="font-bold text-slate-800 text-sm" th:text="${entry.key}"></span>
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 font-extrabold text-xs" th:text="${entry.value + ' Terjual'}"></span>
+                                </div>
+                            </div>
+                            <div th:if="${penjualanBarangList.size() == 0}" class="py-12 text-center text-slate-400 text-sm font-medium">
+                                <span class="text-2xl block mb-2">📭</span> Belum ada data produk terjual
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
-                <div class="grid md:grid-cols-4 gap-5 mb-8">
-                    <div class="pos-card p-6">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Periode</p>
-                        <p class="text-xl font-bold text-slate-900 mt-3" th:text="${laporan.periode}"></p>
-                    </div>
-
-                    <div class="pos-card p-6">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Penjualan</p>
-                        <p class="text-2xl font-bold text-blue-700 mt-3" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPenjualan)}"></p>
-                    </div>
-
-                    <div class="pos-card p-6">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Jumlah Transaksi</p>
-                        <p class="text-2xl font-bold text-green-700 mt-3" th:text="${jumlahTransaksi}"></p>
-                    </div>
-
-                    <div class="pos-card p-6">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Barang Terlaris</p>
-                        <p class="text-xl font-bold text-orange-700 mt-3" th:text="${barangTerlaris}"></p>
-                    </div>
-                </div>
-
-                <div class="pos-card overflow-hidden">
-                    <div class="p-6 border-b border-slate-200">
-                        <h2 class="text-xl font-bold text-slate-900">Daftar Transaksi</h2>
-                        <p class="text-slate-500 text-sm mt-1">Ringkasan transaksi yang masuk ke laporan penjualan.</p>
+                <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                                <span class="text-xl">📊</span> Rincian Transaksi
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-1">Data historis semua nota penjualan yang terekam.</p>
+                        </div>
+                        <button class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-100 flex items-center gap-2 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export Data
+                        </button>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="pos-table">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr>
-                                    <th>ID Transaksi</th>
-                                    <th>Tanggal</th>
-                                    <th>Total Bayar</th>
-                                    <th>Jumlah Item</th>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                    <th class="p-4 font-bold">ID Nota</th>
+                                    <th class="p-4 font-bold">Tanggal Transaksi</th>
+                                    <th class="p-4 font-bold text-center">Jumlah Barang</th>
+                                    <th class="p-4 font-bold text-right">Pendapatan</th>
                                 </tr>
                             </thead>
-
-                            <tbody>
-                                <tr th:each="transaksi : ${daftarTransaksi}">
-                                    <td class="font-bold" th:text="${transaksi.idTransaksi}"></td>
-                                    <td th:text="${transaksi.tanggal}"></td>
-                                    <td class="font-bold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></td>
-                                    <td>
-                                        <span class="pos-badge badge-green" th:text="${transaksi.daftarItem.size() + ' item'}"></span>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr th:each="transaksi : ${daftarTransaksi}" class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="p-4">
+                                        <div class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-50 font-mono text-sm font-bold text-slate-600 border border-slate-200">
+                                            #<span th:text="${transaksi.idTransaksi}"></span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <p class="font-medium text-slate-700" th:text="${transaksi.tanggal}"></p>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold" th:text="${transaksi.daftarItem.size()}"></span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <p class="font-black text-emerald-600" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></p>
                                     </td>
                                 </tr>
 
                                 <tr th:if="${daftarTransaksi.size() == 0}">
-                                    <td colspan="4" class="text-center text-slate-500 py-10">
-                                        Belum ada transaksi untuk laporan.
+                                    <td colspan="4" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span class="text-4xl mb-4">📭</span>
+                                            <p class="text-lg font-bold text-slate-700">Belum ada data penjualan</p>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </section>
+
             </div>
         </main>
     </div>

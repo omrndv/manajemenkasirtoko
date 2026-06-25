@@ -1,62 +1,87 @@
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head('Riwayat Transaksi')}"></head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
 
-    <div class="min-h-screen">
+    <div class="min-h-screen flex">
         <aside th:replace="~{fragments/layout :: sidebar(${user}, 'riwayat')}"></aside>
 
         <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div class="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+                
+                <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
                     <div>
-                        <p class="text-sm font-semibold text-blue-600">Transaction History</p>
-                        <h1 class="text-3xl font-bold text-slate-900">Riwayat Transaksi</h1>
-                        <p class="text-slate-500 mt-1">Lihat daftar transaksi yang sudah berhasil disimpan.</p>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Transaction History</span>
+                        </div>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Riwayat Transaksi</h1>
+                        <p class="text-slate-500 mt-2 text-sm md:text-base">Daftar seluruh transaksi yang telah berhasil dicatat oleh sistem.</p>
                     </div>
 
-                    <a href="/transaksi" class="pos-btn-primary">
-                        + Transaksi Baru
+                    <a href="/transaksi" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-sm transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Transaksi Baru
                     </a>
-                </div>
+                </header>
 
-                <div class="pos-card overflow-hidden">
+                <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <span class="text-xl">🧾</span> Semua Nota
+                        </h3>
+                    </div>
+
                     <div class="overflow-x-auto">
-                        <table class="pos-table">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr>
-                                    <th>ID Transaksi</th>
-                                    <th>Tanggal</th>
-                                    <th>Total Bayar</th>
-                                    <th>Jumlah Item</th>
-                                    <th>Aksi</th>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                    <th class="p-4 font-bold">ID Transaksi</th>
+                                    <th class="p-4 font-bold">Waktu Transaksi</th>
+                                    <th class="p-4 font-bold">Jumlah Item</th>
+                                    <th class="p-4 font-bold text-right">Total Bayar</th>
+                                    <th class="p-4 font-bold text-center">Aksi</th>
                                 </tr>
                             </thead>
-
-                            <tbody>
-                                <tr th:each="transaksi : ${daftarTransaksi}">
-                                    <td class="font-bold" th:text="${transaksi.idTransaksi}"></td>
-                                    <td th:text="${transaksi.tanggal}"></td>
-                                    <td class="font-bold" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></td>
-                                    <td>
-                                        <span class="pos-badge badge-blue" th:text="${transaksi.daftarItem.size() + ' item'}"></span>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr th:each="transaksi : ${daftarTransaksi}" class="hover:bg-slate-50/50 transition-colors group">
+                                    <td class="p-4">
+                                        <div class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-100 font-mono text-sm font-bold text-slate-700">
+                                            #<span th:text="${transaksi.idTransaksi}"></span>
+                                        </div>
                                     </td>
-                                    <td>
-                                        <a th:href="@{/riwayat-transaksi/detail/{id}(id=${transaksi.idTransaksi})}" class="pos-btn-primary">
+                                    <td class="p-4">
+                                        <p class="font-medium text-slate-700" th:text="${transaksi.tanggal}"></p>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                            <span th:text="${transaksi.daftarItem.size()}"></span> Item
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <p class="font-black text-emerald-600" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></p>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <a th:href="@{/riwayat-transaksi/detail/{id}(id=${transaksi.idTransaksi})}" class="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-800 hover:text-white font-bold transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                             Detail
                                         </a>
                                     </td>
                                 </tr>
 
                                 <tr th:if="${daftarTransaksi.size() == 0}">
-                                    <td colspan="5" class="text-center text-slate-500 py-10">
-                                        Belum ada riwayat transaksi.
+                                    <td colspan="5" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span class="text-4xl mb-4">📭</span>
+                                            <p class="text-lg font-bold text-slate-700">Belum ada riwayat transaksi</p>
+                                            <p class="text-sm text-slate-500 mt-1">Lakukan transaksi di menu kasir untuk melihat riwayat.</p>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </section>
             </div>
         </main>
     </div>

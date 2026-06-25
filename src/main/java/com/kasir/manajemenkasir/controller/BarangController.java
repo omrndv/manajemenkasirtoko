@@ -3,6 +3,7 @@ package com.kasir.manajemenkasir.controller;
 import com.kasir.manajemenkasir.model.Barang;
 import com.kasir.manajemenkasir.model.User;
 import com.kasir.manajemenkasir.service.BarangService;
+import com.kasir.manajemenkasir.service.AktivitasLogService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class BarangController {
     private final BarangService barangService;
+    private final AktivitasLogService aktivitasLogService;
 
-    public BarangController(BarangService barangService) {
+    public BarangController(BarangService barangService, AktivitasLogService aktivitasLogService) {
         this.barangService = barangService;
+        this.aktivitasLogService = aktivitasLogService;
     }
 
     private boolean bukanAdmin(HttpSession session) {
@@ -32,7 +35,7 @@ public class BarangController {
         User user = (User) session.getAttribute("userLogin");
 
         model.addAttribute("user", user);
-        model.addAttribute("daftarBarang", barangService.getAllBarang());
+        model.addAttribute("daftarBarang", barangService.getAllBarang(user.getToko()));
 
         return "barang";
     }
@@ -57,7 +60,12 @@ public class BarangController {
             return "redirect:/dashboard";
         }
 
+        User user = (User) session.getAttribute("userLogin");
+        barang.setToko(user.getToko());
+
         barangService.tambahBarang(barang);
+        aktivitasLogService.log(user, "Menambahkan barang baru: " + barang.getNamaBarang() + " (Stok: " + barang.getStok() + ", Harga: " + barang.getHarga() + ")");
+        
         return "redirect:/barang";
     }
 
@@ -75,8 +83,18 @@ public class BarangController {
 
         User user = (User) session.getAttribute("userLogin");
 
+        java.util.List<Barang> list = barangService.getAllBarang(user.getToko());
+        int displayId = 1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getIdBarang() == id) {
+                displayId = i + 1;
+                break;
+            }
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("barang", barang);
+        model.addAttribute("displayId", displayId);
 
         return "edit-barang";
     }
@@ -87,7 +105,12 @@ public class BarangController {
             return "redirect:/dashboard";
         }
 
+        User user = (User) session.getAttribute("userLogin");
+        barang.setToko(user.getToko());
+
         barangService.updateBarang(id, barang);
+        aktivitasLogService.log(user, "Mengubah barang ID #" + id + ": " + barang.getNamaBarang() + " (Stok: " + barang.getStok() + ", Harga: " + barang.getHarga() + ")");
+
         return "redirect:/barang";
     }
 
@@ -97,7 +120,14 @@ public class BarangController {
             return "redirect:/dashboard";
         }
 
+        Barang barang = barangService.getBarangById(id);
+        String namaBarang = (barang != null) ? barang.getNamaBarang() : "ID #" + id;
+
         barangService.hapusBarang(id);
+        
+        User user = (User) session.getAttribute("userLogin");
+        aktivitasLogService.log(user, "Menghapus barang: " + namaBarang);
+
         return "redirect:/barang";
     }
 }

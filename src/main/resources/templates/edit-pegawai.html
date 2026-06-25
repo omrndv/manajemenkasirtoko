@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit Pegawai')}"></head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <div class="min-h-screen">
+        <aside th:replace="~{fragments/layout :: sidebar(${user}, 'pegawai')}"></aside>
+
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto animate-fade-in-up">
+            <div class="max-w-2xl mx-auto">
+                <a href="/pegawai" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-amber-600 transition mb-6">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Batal Edit & Kembali
+                </a>
+
+                <div class="pos-card overflow-hidden">
+                    <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-8 text-white relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
+                        <p class="text-sm font-semibold text-amber-100 uppercase tracking-wider mb-1">Manajemen Tim</p>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Edit Akun Kasir</h1>
+                        <p class="text-amber-50 mt-2 font-light">Perbarui data atau ganti password untuk akun kasir ini.</p>
+                    </div>
+
+                    <div class="p-8 bg-white">
+                        <form th:action="@{/pegawai/edit/{id}(id=${pegawai.idUser})}" method="post" class="space-y-6">
+                            
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-500 uppercase">ID Pengguna</p>
+                                    <p class="font-mono text-lg font-bold text-slate-700" th:text="'#' + ${displayId}"></p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Nama Kasir</label>
+                                    <input type="text" name="namaKasir" class="pos-input" th:value="${pegawai.namaKasir}" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Username Login</label>
+                                    <input type="text" name="username" class="pos-input" th:value="${pegawai.username}" required>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">Password Baru (Opsional)</label>
+                                <input type="password" name="password" class="pos-input" placeholder="Kosongkan jika tidak ingin mengubah password">
+                                <p class="text-xs text-slate-500 mt-2">Hanya isi jika Anda ingin mereset password kasir ini.</p>
+                            </div>
+
+                            <div class="pt-6 border-t border-slate-100 flex gap-4 items-center justify-end">
+                                <a href="/pegawai" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-600 transition">
+                                    Batal
+                                </a>
+                                <button type="submit" class="pos-btn-warning px-8 py-3 flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

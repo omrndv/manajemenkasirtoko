@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Dashboard - KasirPro Central</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
+
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="pos-sidebar fixed left-0 top-0 h-screen w-72 hidden md:flex flex-col p-6 z-40 bg-slate-900 text-white">
+            <div class="mb-12 mt-2">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xl font-bold shadow-lg shadow-indigo-500/20 border border-white/10">
+                        S
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-white">KasirPro</h1>
+                        <p class="text-xs text-indigo-300 font-semibold uppercase tracking-wider">Superadmin</p>
+                    </div>
+                </div>
+                <div class="mt-8 px-4 py-3 bg-white/5 border border-white/10 rounded-xl">
+                    <p class="text-xs text-slate-400 mb-1">Status Panel</p>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></div>
+                        <p class="text-sm font-semibold text-white">Owner Central</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="space-y-1">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">Menu Utama</p>
+                <a href="/superadmin/dashboard" class="pos-menu pos-menu-active">
+                    <i data-lucide="activity" class="w-5 h-5 shrink-0 text-white"></i>
+                    Log Aktivitas
+                </a>
+                <a href="/superadmin/accounts" class="pos-menu hover:bg-white/5 text-slate-300">
+                    <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
+                    Kelola Akun
+                </a>
+            </nav>
+
+            <div class="mt-auto border-t border-white/10 pt-6">
+                <div class="flex items-center gap-3 px-2 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
+                        SA
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white truncate">Superadmin</p>
+                        <p class="text-xs text-indigo-300 font-medium truncate">Owner</p>
+                    </div>
+                </div>
+                <a href="/logout" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 rounded-xl font-bold transition-all text-sm">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    Keluar Sistem
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-72 p-6 md:p-10 min-h-screen overflow-y-auto bg-slate-50">
+            <div class="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
+                
+                <!-- Header -->
+                <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">SaaS Central Monitor</span>
+                        </div>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Log Aktivitas Sistem</h1>
+                        <p class="text-slate-500 mt-2 text-sm md:text-base">Memonitor secara real-time seluruh aktivitas operasional dari semua merchant.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <p class="text-xs text-slate-400">Server Time</p>
+                            <p class="text-sm font-bold text-slate-800 font-mono">GMT+7 WIB</p>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Total Merchant -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-md transition">
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-slate-500">Total Merchant/Toko</p>
+                            <h3 class="text-3xl font-black text-slate-900" th:text="${totalToko}">0</h3>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
+                            <i data-lucide="store" class="w-7 h-7"></i>
+                        </div>
+                    </div>
+                    <!-- Total Akun -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-md transition">
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-slate-500">Total Akun Pengguna</p>
+                            <h3 class="text-3xl font-black text-slate-900" th:text="${totalAkun}">0</h3>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                            <i data-lucide="users" class="w-7 h-7"></i>
+                        </div>
+                    </div>
+                    <!-- Total Logs -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-md transition">
+                        <div class="space-y-2">
+                            <p class="text-sm font-medium text-slate-500">Total Log Aktivitas</p>
+                            <h3 class="text-3xl font-black text-slate-900" th:text="${totalLogs}">0</h3>
+                        </div>
+                        <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100">
+                            <i data-lucide="history" class="w-7 h-7"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <i data-lucide="list" class="w-5 h-5 text-indigo-500"></i> Riwayat Aktivitas Pengguna
+                        </h3>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                    <th class="p-4 font-bold">Waktu</th>
+                                    <th class="p-4 font-bold">Pengguna</th>
+                                    <th class="p-4 font-bold">Toko / Merchant</th>
+                                    <th class="p-4 font-bold">Aktivitas / Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                <tr th:each="log : ${logs}" class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="p-4 font-mono text-slate-500" th:text="${log.waktu}">2026-06-25 10:45:12</td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-slate-800" th:text="${log.username}">username</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                                                  th:classappend="${log.role == 'Admin' ? 'bg-blue-50 text-blue-700 border border-blue-200' : (log.role == 'SuperAdmin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}"
+                                                  th:text="${log.role}">
+                                                ROLE
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 font-semibold text-slate-700" th:text="${log.namaToko}">Nama Toko</td>
+                                    <td class="p-4 text-slate-600 font-medium" th:text="${log.aksi}">Melakukan aksi tertentu</td>
+                                </tr>
+
+                                <tr th:if="${logs.size() == 0}">
+                                    <td colspan="4" class="py-16 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span class="text-4xl mb-4">📭</span>
+                                            <p class="text-lg font-bold text-slate-700">Belum ada aktivitas tercatat</p>
+                                            <p class="text-sm text-slate-500 mt-1">Aktivitas dari admin dan kasir toko akan muncul di sini secara real-time.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

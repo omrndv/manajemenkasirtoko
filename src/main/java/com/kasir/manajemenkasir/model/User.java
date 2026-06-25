@@ -1,10 +1,22 @@
 package com.kasir.manajemenkasir.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "role_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int idUser;
     protected String username;
     protected String password;
     protected String role;
+
+    @ManyToOne
+    @JoinColumn(name = "toko_id")
+    protected Toko toko;
 
     public User() {
     }
@@ -56,5 +68,13 @@ public abstract class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Toko getToko() {
+        return toko;
+    }
+
+    public void setToko(Toko toko) {
+        this.toko = toko;
     }
 }
