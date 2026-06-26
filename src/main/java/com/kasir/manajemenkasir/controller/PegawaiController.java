@@ -135,4 +135,21 @@ public class PegawaiController {
 
         return "redirect:/pegawai";
     }
+
+    @GetMapping("/pegawai/toggle-status/{id}")
+    public String toggleStatus(@PathVariable int id, HttpSession session) {
+        if (bukanAdmin(session)) {
+            return "redirect:/dashboard";
+        }
+
+        User pegawai = userService.getUserById(id);
+        User userLogin = (User) session.getAttribute("userLogin");
+        if (pegawai != null && pegawai.getToko().getIdToko() == userLogin.getToko().getIdToko()) {
+            pegawai.setAktif(!pegawai.isAktif());
+            userService.updateUser(pegawai);
+            aktivitasLogService.log(userLogin, (pegawai.isAktif() ? "Mengaktifkan" : "Menonaktifkan") + " akun kasir: " + pegawai.getUsername());
+        }
+
+        return "redirect:/pegawai";
+    }
 }

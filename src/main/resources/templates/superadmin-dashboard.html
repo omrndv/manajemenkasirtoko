@@ -123,10 +123,18 @@
 
                 <!-- Table Section -->
                 <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50">
                         <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
                             <i data-lucide="list" class="w-5 h-5 text-indigo-500"></i> Riwayat Aktivitas Pengguna
                         </h3>
+                        
+                        <!-- Filters -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input type="text" id="filterUser" placeholder="Filter Pengguna..." class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                            <input type="text" id="filterToko" placeholder="Filter Toko..." class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                            <input type="date" id="filterDate" class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                            <button id="resetFilters" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 transition">Reset</button>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -139,20 +147,20 @@
                                     <th class="p-4 font-bold">Aktivitas / Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm">
-                                <tr th:each="log : ${logs}" class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="p-4 font-mono text-slate-500" th:text="${log.waktu}">2026-06-25 10:45:12</td>
+                            <tbody class="divide-y divide-slate-100 text-sm" id="logTableBody">
+                                <tr th:each="log : ${logs}" class="hover:bg-slate-50/50 transition-colors log-row">
+                                    <td class="p-4 font-mono text-slate-500 log-waktu" th:text="${log.waktu}">2026-06-25 10:45:12</td>
                                     <td class="p-4">
                                         <div class="flex items-center gap-2">
-                                            <span class="font-bold text-slate-800" th:text="${log.username}">username</span>
+                                            <span class="font-bold text-slate-800 log-username" th:text="${log.username}">username</span>
                                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
                                                   th:classappend="${log.role == 'Admin' ? 'bg-blue-50 text-blue-700 border border-blue-200' : (log.role == 'SuperAdmin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}"
                                                   th:text="${log.role}">
                                                 ROLE
-                                            </span>
+                                             </span>
                                         </div>
                                     </td>
-                                    <td class="p-4 font-semibold text-slate-700" th:text="${log.namaToko}">Nama Toko</td>
+                                    <td class="p-4 font-semibold text-slate-700 log-toko" th:text="${log.namaToko}">Nama Toko</td>
                                     <td class="p-4 text-slate-600 font-medium" th:text="${log.aksi}">Melakukan aksi tertentu</td>
                                 </tr>
 
@@ -168,6 +176,22 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50" id="paginationBar">
+                        <div class="text-xs font-bold text-slate-500">
+                            Menampilkan <span id="showingStart">0</span> - <span id="showingEnd">0</span> dari <span id="totalItems">0</span> aktivitas
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button id="prevPageBtn" class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <span id="pageNumbersContainer" class="flex gap-1"></span>
+                            <button id="nextPageBtn" class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
                 </section>
 
             </div>
@@ -176,6 +200,125 @@
 
     <script>
         lucide.createIcons();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const filterUser = document.getElementById("filterUser");
+            const filterToko = document.getElementById("filterToko");
+            const filterDate = document.getElementById("filterDate");
+            const resetFilters = document.getElementById("resetFilters");
+            const rows = Array.from(document.querySelectorAll(".log-row"));
+            
+            // Pagination Configuration
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            let filteredRows = [...rows];
+
+            const showingStart = document.getElementById("showingStart");
+            const showingEnd = document.getElementById("showingEnd");
+            const totalItems = document.getElementById("totalItems");
+            const prevPageBtn = document.getElementById("prevPageBtn");
+            const nextPageBtn = document.getElementById("nextPageBtn");
+            const pageNumbersContainer = document.getElementById("pageNumbersContainer");
+
+            function updatePagination() {
+                const totalFiltered = filteredRows.length;
+                const totalPages = Math.ceil(totalFiltered / itemsPerPage) || 1;
+
+                if (currentPage > totalPages) {
+                    currentPage = totalPages;
+                }
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, totalFiltered);
+
+                // Show/Hide rows
+                rows.forEach(row => row.style.display = "none");
+                filteredRows.slice(startIndex, endIndex).forEach(row => {
+                    row.style.display = "";
+                });
+
+                // Update text
+                showingStart.textContent = totalFiltered === 0 ? 0 : startIndex + 1;
+                showingEnd.textContent = endIndex;
+                totalItems.textContent = totalFiltered;
+
+                // Update buttons state
+                prevPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage === totalPages;
+
+                // Render page numbers
+                pageNumbersContainer.innerHTML = "";
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement("button");
+                    btn.className = `w-8 h-8 rounded-xl text-xs font-bold transition flex items-center justify-center ${
+                        i === currentPage
+                        ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/20"
+                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                    }`;
+                    btn.textContent = i;
+                    btn.addEventListener("click", () => {
+                        currentPage = i;
+                        updatePagination();
+                    });
+                    pageNumbersContainer.appendChild(btn);
+                }
+            }
+
+            function applyFilters() {
+                const userVal = filterUser.value.toLowerCase().trim();
+                const tokoVal = filterToko.value.toLowerCase().trim();
+                const dateVal = filterDate.value; // YYYY-MM-DD
+
+                filteredRows = rows.filter(row => {
+                    const rowUser = row.querySelector(".log-username").textContent.toLowerCase();
+                    const rowToko = row.querySelector(".log-toko").textContent.toLowerCase();
+                    const rowWaktu = row.querySelector(".log-waktu").textContent;
+
+                    const matchesUser = !userVal || rowUser.includes(userVal);
+                    const matchesToko = !tokoVal || rowToko.includes(tokoVal);
+                    const matchesDate = !dateVal || rowWaktu.includes(dateVal);
+
+                    return matchesUser && matchesToko && matchesDate;
+                });
+
+                currentPage = 1;
+                updatePagination();
+            }
+
+            filterUser.addEventListener("input", applyFilters);
+            filterToko.addEventListener("input", applyFilters);
+            filterDate.addEventListener("change", applyFilters);
+
+            resetFilters.addEventListener("click", () => {
+                filterUser.value = "";
+                filterToko.value = "";
+                filterDate.value = "";
+                filteredRows = [...rows];
+                currentPage = 1;
+                updatePagination();
+            });
+
+            prevPageBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+
+            nextPageBtn.addEventListener("click", () => {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+
+            // Initial pagination run
+            updatePagination();
+        });
     </script>
 </body>
 </html>

@@ -13,6 +13,7 @@ public abstract class User {
     protected String username;
     protected String password;
     protected String role;
+    protected boolean aktif = true;
 
     @ManyToOne
     @JoinColumn(name = "toko_id")
@@ -76,5 +77,13 @@ public abstract class User {
 
     public void setToko(Toko toko) {
         this.toko = toko;
+    }
+
+    public boolean isAktif() {
+        return aktif;
+    }
+
+    public void setAktif(boolean aktif) {
+        this.aktif = aktif;
     }
 }

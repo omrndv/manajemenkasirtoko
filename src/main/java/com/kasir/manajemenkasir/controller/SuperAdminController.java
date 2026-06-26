@@ -74,11 +74,49 @@ public class SuperAdminController {
 
         User user = (User) session.getAttribute("userLogin");
         List<User> accounts = userService.getAllUser();
+        List<Toko> daftarToko = tokoRepository.findAll();
 
         model.addAttribute("user", user);
         model.addAttribute("accounts", accounts);
+        model.addAttribute("daftarToko", daftarToko);
 
         return "superadmin-accounts";
+    }
+
+    @GetMapping("/superadmin/accounts/toggle-status/{id}")
+    public String toggleAccountStatus(@PathVariable int id, HttpSession session) {
+        if (bukanSuperAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        User superAdmin = (User) session.getAttribute("userLogin");
+        User targetUser = userService.getUserById(id);
+
+        if (targetUser != null && !targetUser.getRole().equalsIgnoreCase("SuperAdmin")) {
+            targetUser.setAktif(!targetUser.isAktif());
+            userRepository.save(targetUser);
+            aktivitasLogService.log(superAdmin, "Superadmin " + (targetUser.isAktif() ? "mengaktifkan" : "menonaktifkan") + " akun: " + targetUser.getUsername());
+        }
+
+        return "redirect:/superadmin/accounts";
+    }
+
+    @GetMapping("/superadmin/toko/toggle-status/{id}")
+    public String toggleStoreStatus(@PathVariable int id, HttpSession session) {
+        if (bukanSuperAdmin(session)) {
+            return "redirect:/login";
+        }
+
+        User superAdmin = (User) session.getAttribute("userLogin");
+        Toko toko = tokoRepository.findById(id).orElse(null);
+
+        if (toko != null) {
+            toko.setAktif(!toko.isAktif());
+            tokoRepository.save(toko);
+            aktivitasLogService.log(superAdmin, "Superadmin " + (toko.isAktif() ? "mengaktifkan" : "menonaktifkan") + " toko: " + toko.getNamaToko());
+        }
+
+        return "redirect:/superadmin/accounts";
     }
 
     @GetMapping("/superadmin/accounts/tambah")

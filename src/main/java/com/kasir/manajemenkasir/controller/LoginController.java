@@ -124,6 +124,16 @@ public class LoginController {
             return "login";
         }
 
+        if (!user.isAktif()) {
+            model.addAttribute("error", "Akun Anda telah dinonaktifkan oleh administrator.");
+            return "login";
+        }
+
+        if (user.getToko() != null && !user.getToko().isAktif()) {
+            model.addAttribute("error", "Toko Anda telah dinonaktifkan oleh superadmin.");
+            return "login";
+        }
+
         session.setAttribute("userLogin", user);
 
         // Handle "Ingat Saya" cookie
@@ -190,12 +200,41 @@ public class LoginController {
         model.addAttribute("stokMenipisList", barangService.getStokMenipis(user.getToko()));
         model.addAttribute("jumlahStokMenipis", barangService.getStokMenipis(user.getToko()).size());
 
-        // Hitung penjualan 7 hari terakhir untuk grafik
+        java.util.List<Transaksi> semuaTrx = transaksiService.getAllTransaksi(user.getToko());
+        
+        // Build semuaTransaksiData for dynamic client-side filtering and chart toggles (now including items breakdown for Pie Chart)
+        java.util.List<java.util.Map<String, Object>> semuaTransaksiData = new java.util.ArrayList<>();
+        for (Transaksi t : semuaTrx) {
+            double laba = 0;
+            java.util.List<java.util.Map<String, Object>> itemsList = new java.util.ArrayList<>();
+            for (com.kasir.manajemenkasir.model.ItemTransaksi item : t.getDaftarItem()) {
+                double modal = item.getBarang() != null ? item.getBarang().getHargaModal() : 0;
+                double harga = item.getBarang() != null ? item.getBarang().getHarga() : (item.getSubtotal() / item.getQty());
+                laba += (harga - modal) * item.getQty();
+                
+                java.util.Map<String, Object> itemMap = new java.util.HashMap<>();
+                itemMap.put("nama", item.getBarang() != null ? item.getBarang().getNamaBarang() : "Produk Dihapus");
+                itemMap.put("kategori", item.getBarang() != null && item.getBarang().getKategori() != null && !item.getBarang().getKategori().trim().isEmpty() ? item.getBarang().getKategori().trim() : "Umum");
+                itemMap.put("qty", item.getQty());
+                itemMap.put("subtotal", item.getSubtotal());
+                itemsList.add(itemMap);
+            }
+            laba -= t.getDiskon();
+            
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("tanggal", t.getTanggal());
+            map.put("omset", t.getTotalBayar());
+            map.put("laba", laba);
+            map.put("items", itemsList);
+            semuaTransaksiData.add(map);
+        }
+        model.addAttribute("semuaTransaksiData", semuaTransaksiData);
+
+        // Keep default chart labels/data for backward compatibility or initial load
         java.util.List<String> chartLabels = new java.util.ArrayList<>();
         java.util.List<Double> chartData = new java.util.ArrayList<>();
         java.time.LocalDate today = java.time.LocalDate.now();
         
-        java.util.List<Transaksi> semuaTrx = transaksiService.getAllTransaksi(user.getToko());
         java.util.Map<String, Double> penjualanPerHari = new java.util.HashMap<>();
         for (Transaksi t : semuaTrx) {
             penjualanPerHari.put(t.getTanggal(), penjualanPerHari.getOrDefault(t.getTanggal(), 0.0) + t.getTotalBayar());

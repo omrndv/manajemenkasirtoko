@@ -56,6 +56,7 @@ public class BarangService {
     }
 
     public void hapusBarang(int idBarang) {
+        barangRepository.nullifyItemTransaksiReferences(idBarang);
         barangRepository.deleteById(idBarang);
     }
 

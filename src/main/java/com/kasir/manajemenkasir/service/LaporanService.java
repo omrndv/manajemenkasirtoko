@@ -65,7 +65,7 @@ public class LaporanService {
             List<ItemTransaksi> daftarItem = transaksi.getDaftarItem();
 
             for (ItemTransaksi item : daftarItem) {
-                String namaBarang = item.getBarang().getNamaBarang();
+                String namaBarang = item.getBarang() != null ? item.getBarang().getNamaBarang() : "Produk Dihapus";
                 int qty = item.getQty();
 
                 jumlahTerjual.put(namaBarang, jumlahTerjual.getOrDefault(namaBarang, 0) + qty);
@@ -90,8 +90,8 @@ public class LaporanService {
 
         for (Transaksi transaksi : transaksiService.getAllTransaksi(toko)) {
             for (ItemTransaksi item : transaksi.getDaftarItem()) {
-                double hargaJual = item.getBarang().getHarga();
-                double hargaModal = item.getBarang().getHargaModal();
+                double hargaJual = item.getBarang() != null ? item.getBarang().getHarga() : (item.getSubtotal() / item.getQty());
+                double hargaModal = item.getBarang() != null ? item.getBarang().getHargaModal() : 0;
                 int qty = item.getQty();
                 
                 totalLaba += (hargaJual - hargaModal) * qty;
@@ -109,6 +109,10 @@ public class LaporanService {
             total += t.getDiskon();
         }
         return total;
+    }
+
+    public double fontTotalPajak(Toko toko) {
+        return hitungTotalPajak(toko);
     }
 
     public double hitungTotalPajak(Toko toko) {
@@ -133,7 +137,7 @@ public class LaporanService {
         Map<String, Integer> map = new HashMap<>();
         for (Transaksi t : transaksiService.getAllTransaksi(toko)) {
             for (ItemTransaksi item : t.getDaftarItem()) {
-                String name = item.getBarang().getNamaBarang();
+                String name = item.getBarang() != null ? item.getBarang().getNamaBarang() : "Produk Dihapus";
                 map.put(name, map.getOrDefault(name, 0) + item.getQty());
             }
         }
@@ -144,7 +148,7 @@ public class LaporanService {
         Map<String, Double> map = new HashMap<>();
         for (Transaksi t : transaksiService.getAllTransaksi(toko)) {
             for (ItemTransaksi item : t.getDaftarItem()) {
-                String cat = item.getBarang().getKategori();
+                String cat = item.getBarang() != null ? item.getBarang().getKategori() : "Umum";
                 if (cat == null || cat.trim().isEmpty()) {
                     cat = "Umum";
                 }

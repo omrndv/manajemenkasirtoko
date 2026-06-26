@@ -88,10 +88,18 @@
 
                 <!-- Table Section -->
                 <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50">
                         <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
                             <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i> Semua Akun Terdaftar
                         </h3>
+                        
+                        <!-- Filters -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select id="filterTokoSelect" class="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition cursor-pointer">
+                                <option value="Semua">Semua Toko</option>
+                                <option th:each="t : ${daftarToko}" th:value="${t.namaToko}" th:text="${t.namaToko}"></option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -102,12 +110,13 @@
                                     <th class="p-4 font-bold">Username</th>
                                     <th class="p-4 font-bold">Role</th>
                                     <th class="p-4 font-bold">Nama Toko / Merchant</th>
-                                    <th class="p-4 font-bold">Kontak Toko</th>
+                                    <th class="p-4 font-bold text-center">Status Toko</th>
+                                    <th class="p-4 font-bold text-center">Status Akun</th>
                                     <th class="p-4 font-bold text-center w-48">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm">
-                                <tr th:each="acc, iterStat : ${accounts}" class="hover:bg-slate-50/50 transition-colors">
+                            <tbody class="divide-y divide-slate-100 text-sm" id="accountsTableBody">
+                                <tr th:each="acc, iterStat : ${accounts}" class="hover:bg-slate-50/50 transition-colors account-row">
                                     <td class="p-4 text-center font-bold text-slate-500" th:text="${iterStat.count}">1</td>
                                     <td class="p-4">
                                         <div class="font-bold text-slate-900" th:text="${acc.username}">username</div>
@@ -117,10 +126,33 @@
                                               th:classappend="${acc.role == 'Admin' ? 'bg-blue-50 text-blue-700 border border-blue-200' : (acc.role == 'SuperAdmin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}"
                                               th:text="${acc.role}">
                                             ROLE
-                                        </span>
+                                         </span>
                                     </td>
-                                    <td class="p-4 font-semibold text-slate-700" th:text="${acc.toko != null ? acc.toko.namaToko : 'Sistem / Owner'}">Nama Toko</td>
-                                    <td class="p-4 text-slate-500" th:text="${acc.toko != null ? acc.toko.kontak : '-'}">Kontak Toko</td>
+                                    <td class="p-4 font-semibold text-slate-700 account-toko-name" th:text="${acc.toko != null ? acc.toko.namaToko : 'Sistem / Owner'}">Nama Toko</td>
+                                    <td class="p-4 text-center">
+                                        <div th:if="${acc.toko != null}">
+                                            <a th:href="@{/superadmin/toko/toggle-status/{id}(id=${acc.toko.idToko})}" 
+                                               th:class="${acc.toko.aktif} 
+                                                          ? 'inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 hover:bg-emerald-200 transition' 
+                                                          : 'inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition'"
+                                               th:text="${acc.toko.aktif} ? 'Toko Aktif' : 'Toko Nonaktif'"
+                                               title="Klik untuk mengubah status toko">
+                                            </a>
+                                        </div>
+                                        <span th:if="${acc.toko == null}" class="text-slate-400 font-bold text-xs">-</span>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <div th:if="${acc.role != 'SuperAdmin'}">
+                                            <a th:href="@{/superadmin/accounts/toggle-status/{id}(id=${acc.idUser})}" 
+                                               th:class="${acc.aktif} 
+                                                          ? 'inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 hover:bg-emerald-200 transition' 
+                                                          : 'inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition'"
+                                               th:text="${acc.aktif} ? 'Akun Aktif' : 'Akun Nonaktif'"
+                                               title="Klik untuk mengubah status akun">
+                                            </a>
+                                        </div>
+                                        <span th:if="${acc.role == 'SuperAdmin'}" class="text-slate-400 font-bold text-xs">-</span>
+                                    </td>
                                     <td class="p-4 text-center">
                                         <!-- Prevent superadmin from deleting himself -->
                                         <div th:if="${acc.role == 'SuperAdmin'}">
@@ -143,7 +175,7 @@
                                 </tr>
 
                                 <tr th:if="${accounts.size() == 0}">
-                                    <td colspan="6" class="py-16 text-center">
+                                    <td colspan="7" class="py-16 text-center">
                                         <div class="flex flex-col items-center justify-center">
                                             <span class="text-4xl mb-4">👥</span>
                                             <p class="text-lg font-bold text-slate-700">Belum ada akun terdaftar</p>
@@ -161,6 +193,25 @@
 
     <script>
         lucide.createIcons();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const filterTokoSelect = document.getElementById("filterTokoSelect");
+            const rows = document.querySelectorAll(".account-row");
+
+            if (filterTokoSelect) {
+                filterTokoSelect.addEventListener("change", () => {
+                    const selectedToko = filterTokoSelect.value;
+                    rows.forEach(row => {
+                        const rowToko = row.querySelector(".account-toko-name").textContent.trim();
+                        if (selectedToko === "Semua" || rowToko === selectedToko) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

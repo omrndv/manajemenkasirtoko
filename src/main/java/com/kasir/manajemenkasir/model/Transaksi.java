@@ -15,6 +15,7 @@ public class Transaksi {
     private double pajakPpn;
     private double totalBayar;
     private double uangDibayar;
+    private String namaKasir;
 
     @ManyToOne
     @JoinColumn(name = "toko_id")
@@ -132,5 +133,13 @@ public class Transaksi {
 
     public void setUangDibayar(double uangDibayar) {
         this.uangDibayar = uangDibayar;
+    }
+
+    public String getNamaKasir() {
+        return namaKasir;
+    }
+
+    public void setNamaKasir(String namaKasir) {
+        this.namaKasir = namaKasir;
     }
 }

@@ -119,10 +119,10 @@
             <div class="space-y-3 mb-4">
                 <div th:each="item : ${transaksi.daftarItem}">
                     <div class="flex justify-between font-bold mb-1">
-                        <span th:text="${item.barang.namaBarang}"></span>
+                        <span th:text="${item.barang != null ? item.barang.namaBarang : 'Produk Dihapus'}"></span>
                     </div>
                     <div class="flex justify-between text-xs text-slate-600">
-                        <span th:text="${item.qty} + ' x ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang.harga)}"></span>
+                        <span th:text="${item.qty} + ' x ' + ${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.barang != null ? item.barang.harga : (item.subtotal / item.qty))}"></span>
                         <span class="font-bold text-slate-800" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(item.subtotal)}"></span>
                     </div>
                 </div>

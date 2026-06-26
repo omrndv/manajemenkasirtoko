@@ -42,6 +42,7 @@
                                     <th class="p-4 font-bold w-20">ID</th>
                                     <th class="p-4 font-bold">Username</th>
                                     <th class="p-4 font-bold">Role</th>
+                                    <th class="p-4 font-bold">Status</th>
                                     <th class="p-4 font-bold text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -59,16 +60,30 @@
                                             Kasir
                                         </span>
                                     </td>
+                                    <td class="p-4">
+                                        <span th:if="${pegawai.aktif}" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800">
+                                            Aktif
+                                        </span>
+                                        <span th:if="${!pegawai.aktif}" class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-600">
+                                            Nonaktif
+                                        </span>
+                                    </td>
                                     <td class="p-4 text-center">
                                         <div th:if="${pegawai.role == 'Kasir'}" class="flex gap-2 justify-center">
-                                            <a th:href="@{/pegawai/edit/{id}(id=${pegawai.idUser})}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 font-bold transition">
+                                            <a th:href="@{/pegawai/toggle-status/{id}(id=${pegawai.idUser})}" 
+                                               th:class="${pegawai.aktif} 
+                                                          ? 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold transition text-xs' 
+                                                          : 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold transition text-xs'"
+                                               th:text="${pegawai.aktif} ? 'Nonaktifkan' : 'Aktifkan'">
+                                            </a>
+                                            <a th:href="@{/pegawai/edit/{id}(id=${pegawai.idUser})}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 font-bold transition text-xs">
                                                 Edit
                                             </a>
-                                            <a th:href="@{/pegawai/hapus/{id}(id=${pegawai.idUser})}" onclick="return confirm('Apakah Anda yakin ingin menghapus akun kasir ini?');" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-bold transition">
+                                            <a th:href="@{/pegawai/hapus/{id}(id=${pegawai.idUser})}" onclick="return confirm('Apakah Anda yakin ingin menghapus akun kasir ini?');" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-bold transition text-xs">
                                                 Hapus
                                             </a>
                                         </div>
-                                        <span th:if="${pegawai.role == 'Admin'}" class="text-slate-400 text-sm font-medium">Tidak dapat dihapus</span>
+                                        <span th:if="${pegawai.role == 'Admin'}" class="text-slate-400 text-sm font-medium">Tidak dapat diubah</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -80,9 +95,9 @@
     </div>
 
     <!-- Modal Tambah Kasir -->
-    <div id="modalTambah" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="document.getElementById('modalTambah').classList.add('hidden')"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up">
+    <div id="modalTambah" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="document.getElementById('modalTambah').classList.add('hidden')"></div>
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up z-10">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 class="font-bold text-lg text-slate-900">Tambah Akun Kasir</h3>
                 <button onclick="document.getElementById('modalTambah').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">

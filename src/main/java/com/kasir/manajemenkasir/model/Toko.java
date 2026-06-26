@@ -12,6 +12,7 @@ public class Toko {
     private String alamat;
     private String kontak;
     private double persentasePajak;
+    private boolean aktif = true;
 
     public Toko() {
     }
@@ -61,5 +62,13 @@ public class Toko {
 
     public void setPersentasePajak(double persentasePajak) {
         this.persentasePajak = persentasePajak;
+    }
+
+    public boolean isAktif() {
+        return aktif;
+    }
+
+    public void setAktif(boolean aktif) {
+        this.aktif = aktif;
     }
 }

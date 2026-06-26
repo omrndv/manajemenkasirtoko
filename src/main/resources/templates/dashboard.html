@@ -33,73 +33,91 @@
                 </header>
 
                 <!-- STATISTIK: 5 Metric Cards -->
-                <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
                     
                     <!-- Metric: Total Barang -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-blue-500 flex flex-col justify-between">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-500/30 transition duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+                            <div class="w-11 h-11 rounded-2xl bg-blue-50/70 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                                 <i data-lucide="package" class="w-5 h-5"></i>
                             </div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Barang</p>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Total Barang</p>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900" th:text="${totalBarang}"></h3>
+                        <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight" th:text="${totalBarang}"></h3>
                     </div>
 
                     <!-- Metric: Total Stok -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-indigo-500 flex flex-col justify-between">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-500/30 transition duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+                            <div class="w-11 h-11 rounded-2xl bg-indigo-50/70 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                                 <i data-lucide="boxes" class="w-5 h-5"></i>
                             </div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Stok</p>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Total Stok</p>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900" th:text="${totalStok}"></h3>
+                        <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight" th:text="${totalStok}"></h3>
                     </div>
 
                     <!-- Metric: Total Transaksi -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-emerald-500 flex flex-col justify-between">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-500/30 transition duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-50/70 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                                 <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                             </div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Transaksi</p>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Total Transaksi</p>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900" th:text="${jumlahTransaksi}"></h3>
+                        <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight" th:text="${jumlahTransaksi}"></h3>
                     </div>
 
                     <!-- Metric: Total Pendapatan -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-amber-500 flex flex-col justify-between">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-500/30 transition duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+                            <div class="w-11 h-11 rounded-2xl bg-amber-50/70 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                                 <i data-lucide="banknote" class="w-5 h-5"></i>
                             </div>
-                            <p class="text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-1">Total Pendapatan</p>
+                            <p class="text-[11px] font-bold text-amber-700 uppercase tracking-wider mb-1.5">Total Pendapatan</p>
                         </div>
-                        <h3 class="text-lg font-black text-slate-900 truncate" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPenjualan)}"></h3>
+                        <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight truncate" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalPenjualan)}"></h3>
                     </div>
 
                     <!-- Metric: Total Keuntungan -->
-                    <div class="bg-gradient-to-br from-white to-purple-50 p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200 border-b-4 border-b-purple-500 flex flex-col justify-between">
+                    <div class="bg-gradient-to-br from-white to-purple-50/30 p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-purple-500/30 transition duration-300 flex flex-col justify-between group">
                         <div>
-                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3 border border-purple-200">
+                            <div class="w-11 h-11 rounded-2xl bg-purple-100/70 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 border border-purple-200/20">
                                 <i data-lucide="trending-up" class="w-5 h-5"></i>
                             </div>
-                            <p class="text-[10px] font-bold text-purple-700 uppercase tracking-wider mb-1">Keuntungan Bersih</p>
+                            <p class="text-[11px] font-bold text-purple-700 uppercase tracking-wider mb-1.5">Keuntungan Bersih</p>
                         </div>
-                        <h3 class="text-lg font-black text-purple-900 truncate" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalKeuntungan)}"></h3>
+                        <h3 class="text-2xl font-extrabold text-purple-900 tracking-tight truncate" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(totalKeuntungan)}"></h3>
                     </div>
                 </section>
 
                 <!-- CHART & ALERTS GRID -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Column 1 & 2: Sales Chart -->
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between min-h-[350px]">
-                        <div class="mb-4">
-                            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <i data-lucide="line-chart" class="w-5 h-5 text-indigo-500"></i> Grafik Omset Penjualan (7 Hari Terakhir)
-                            </h3>
-                            <p class="text-xs text-slate-500">Menampilkan tren omset penjualan harian toko Anda.</p>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between min-h-[380px]">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                    <i data-lucide="line-chart" class="w-5 h-5 text-indigo-500"></i> Grafik Performa Penjualan
+                                </h3>
+                                <p class="text-xs text-slate-500">Pantau omset dan keuntungan bersih toko Anda secara dinamis.</p>
+                            </div>
+                            
+                            <!-- Chart Controls -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <!-- Metric Selector -->
+                                <select id="chartMetric" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition cursor-pointer">
+                                    <option value="omset">Omset Penjualan</option>
+                                    <option value="laba">Keuntungan Bersih</option>
+                                </select>
+                                
+                                <!-- Period Selector -->
+                                <select id="chartPeriod" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition cursor-pointer">
+                                    <option value="hari">Harian (7 Hari)</option>
+                                    <option value="bulan">Bulanan (Tahun Ini)</option>
+                                    <option value="tahun">Tahunan</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="flex-1 relative min-h-[250px]">
                             <canvas id="salesChart"></canvas>
@@ -139,6 +157,35 @@
                                     </a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PIE CHARTS SECTION -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Pie Chart: Kategori Terlaris -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[350px]">
+                        <div class="mb-4 border-b border-slate-100 pb-4">
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                <span class="text-indigo-500">🏷️</span> Kategori Terlaris
+                            </h3>
+                            <p class="text-xs text-slate-500">Kategori produk dengan volume penjualan tertinggi.</p>
+                        </div>
+                        <div class="flex-1 relative flex items-center justify-center min-h-[220px]">
+                            <canvas id="categoryPieChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Pie Chart: Produk Terlaris -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col min-h-[350px]">
+                        <div class="mb-4 border-b border-slate-100 pb-4">
+                            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                                <span class="text-indigo-500">🛍️</span> Produk Terlaris
+                            </h3>
+                            <p class="text-xs text-slate-500">Produk yang paling banyak dibeli oleh pelanggan.</p>
+                        </div>
+                        <div class="flex-1 relative flex items-center justify-center min-h-[220px]">
+                            <canvas id="productPieChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -220,78 +267,280 @@
     <script th:inline="javascript">
         lucide.createIcons();
         
-        // Get data from Thymeleaf
-        const chartLabels = /*[[${chartLabels}]]*/ [];
-        const chartData = /*[[${chartData}]]*/ [];
+        // Get all transactions data from Thymeleaf
+        const semuaTrx = /*[[${semuaTransaksiData}]]*/ [];
         
+        const metricSelector = document.getElementById('chartMetric');
+        const periodSelector = document.getElementById('chartPeriod');
         const ctx = document.getElementById('salesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: chartLabels,
-                datasets: [{
-                    label: 'Omset Penjualan',
-                    data: chartData,
-                    borderColor: 'rgb(99, 102, 241)',
-                    backgroundColor: 'rgba(99, 102, 241, 0.05)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.35,
-                    pointBackgroundColor: 'rgb(99, 102, 241)',
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(context.parsed.y);
-                                }
-                                return label;
-                            }
-                        }
-                    }
+        const catPieCtx = document.getElementById('categoryPieChart').getContext('2d');
+        const prodPieCtx = document.getElementById('productPieChart').getContext('2d');
+        
+        let salesChart;
+        let categoryPieChart;
+        let productPieChart;
+
+        function renderChart(labels, data, labelName) {
+            if (salesChart) {
+                salesChart.destroy();
+            }
+            
+            const isLaba = labelName.includes('Keuntungan');
+            
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelName,
+                        data: data,
+                        borderColor: isLaba ? 'rgb(168, 85, 247)' : 'rgb(99, 102, 241)',
+                        backgroundColor: isLaba ? 'rgba(168, 85, 247, 0.05)' : 'rgba(99, 102, 241, 0.05)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: isLaba ? 'rgb(168, 85, 247)' : 'rgb(99, 102, 241)',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.04)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(value);
-                            },
-                            font: {
-                                size: 10
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                             display: false
                         },
-                        ticks: {
-                            font: {
-                                size: 10
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.04)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(value);
+                                },
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
                             }
                         }
                     }
                 }
+            });
+        }
+
+        function renderPieCharts(filteredTrx) {
+            // Aggregate categories and products
+            const categoryMap = {};
+            const productMap = {};
+
+            filteredTrx.forEach(t => {
+                if (t.items) {
+                    t.items.forEach(item => {
+                        categoryMap[item.kategori] = (categoryMap[item.kategori] || 0) + item.qty;
+                        productMap[item.nama] = (productMap[item.nama] || 0) + item.qty;
+                    });
+                }
+            });
+
+            // Sort and get top entries
+            const sortedCategories = Object.entries(categoryMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const sortedProducts = Object.entries(productMap)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            // Recreate Category Pie Chart
+            if (categoryPieChart) {
+                categoryPieChart.destroy();
             }
-        });
+            categoryPieChart = new Chart(catPieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedCategories.map(x => x[0]),
+                    datasets: [{
+                        data: sortedCategories.map(x => x[1]),
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.85)',
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(245, 158, 11, 0.85)',
+                            'rgba(239, 68, 68, 0.85)',
+                            'rgba(168, 85, 247, 0.85)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Recreate Product Pie Chart
+            if (productPieChart) {
+                productPieChart.destroy();
+            }
+            productPieChart = new Chart(prodPieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedProducts.map(x => x[0]),
+                    datasets: [{
+                        data: sortedProducts.map(x => x[1]),
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.85)',
+                            'rgba(236, 72, 153, 0.85)',
+                            'rgba(14, 165, 233, 0.85)',
+                            'rgba(249, 115, 22, 0.85)',
+                            'rgba(107, 114, 128, 0.85)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartData() {
+            const metric = metricSelector.value;
+            const period = periodSelector.value;
+            
+            let labels = [];
+            let data = [];
+            let labelName = metric === 'omset' ? 'Omset Penjualan' : 'Keuntungan Bersih';
+            
+            let filteredTransactions = [];
+
+            if (period === 'hari') {
+                // Last 7 Days
+                const today = new Date();
+                const map = {};
+                
+                const validDates = new Set();
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() - i);
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const dateStr = `${year}-${month}-${day}`;
+                    validDates.add(dateStr);
+                    
+                    const formattedLabel = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                    labels.push(formattedLabel);
+                    map[dateStr] = 0;
+                }
+
+                semuaTrx.forEach(t => {
+                    if (validDates.has(t.tanggal)) {
+                        map[t.tanggal] += t[metric];
+                        filteredTransactions.push(t);
+                    }
+                });
+
+                labels.forEach((lbl, index) => {
+                    const keys = Array.from(validDates);
+                    data.push(map[keys[index]] || 0);
+                });
+                
+            } else if (period === 'bulan') {
+                // Monthly Grouping for current year
+                const currentYear = new Date().getFullYear();
+                const map = {};
+                
+                semuaTrx.forEach(t => {
+                    const d = new Date(t.tanggal);
+                    if (d.getFullYear() === currentYear) {
+                        const month = d.getMonth() + 1;
+                        map[month] = (map[month] || 0) + t[metric];
+                        filteredTransactions.push(t);
+                    }
+                });
+                
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                for (let m = 1; m <= 12; m++) {
+                    labels.push(monthNames[m - 1]);
+                    data.push(map[m] || 0);
+                }
+                labelName += ` (${currentYear})`;
+            } else if (period === 'tahun') {
+                // Group by Year
+                const map = {};
+                semuaTrx.forEach(t => {
+                    const year = new Date(t.tanggal).getFullYear();
+                    map[year] = (map[year] || 0) + t[metric];
+                    filteredTransactions.push(t); // All transactions included in yearly view
+                });
+                
+                const years = Object.keys(map).sort();
+                if (years.length === 0) {
+                    const currentYear = new Date().getFullYear();
+                    labels.push(currentYear.toString());
+                    data.push(0);
+                } else {
+                    years.forEach(y => {
+                        labels.push(y);
+                        data.push(map[y]);
+                    });
+                }
+            }
+            
+            renderChart(labels, data, labelName);
+            renderPieCharts(filteredTransactions);
+        }
+
+        metricSelector.addEventListener('change', updateChartData);
+        periodSelector.addEventListener('change', updateChartData);
+
+        // Initial Load
+        updateChartData();
     </script>
 </body>
 </html>

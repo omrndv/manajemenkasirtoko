@@ -48,8 +48,15 @@ public class BarangController {
 
         User user = (User) session.getAttribute("userLogin");
 
+        java.util.List<String> categories = barangService.getAllBarang(user.getToko()).stream()
+                .map(Barang::getKategori)
+                .filter(c -> c != null && !c.trim().isEmpty())
+                .distinct()
+                .collect(java.util.stream.Collectors.toList());
+
         model.addAttribute("user", user);
         model.addAttribute("barang", new Barang());
+        model.addAttribute("categories", categories);
 
         return "tambah-barang";
     }
@@ -92,9 +99,16 @@ public class BarangController {
             }
         }
 
+        java.util.List<String> categories = barangService.getAllBarang(user.getToko()).stream()
+                .map(Barang::getKategori)
+                .filter(c -> c != null && !c.trim().isEmpty())
+                .distinct()
+                .collect(java.util.stream.Collectors.toList());
+
         model.addAttribute("user", user);
         model.addAttribute("barang", barang);
         model.addAttribute("displayId", displayId);
+        model.addAttribute("categories", categories);
 
         return "edit-barang";
     }

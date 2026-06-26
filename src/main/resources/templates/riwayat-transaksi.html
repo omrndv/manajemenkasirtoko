@@ -38,6 +38,7 @@
                                 <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
                                     <th class="p-4 font-bold">ID Transaksi</th>
                                     <th class="p-4 font-bold">Waktu Transaksi</th>
+                                    <th class="p-4 font-bold">Kasir</th>
                                     <th class="p-4 font-bold">Jumlah Item</th>
                                     <th class="p-4 font-bold text-right">Total Bayar</th>
                                     <th class="p-4 font-bold text-center">Aksi</th>
@@ -54,6 +55,9 @@
                                         <p class="font-medium text-slate-700" th:text="${transaksi.tanggal}"></p>
                                     </td>
                                     <td class="p-4">
+                                        <p class="font-semibold text-slate-600" th:text="${transaksi.namaKasir != null ? transaksi.namaKasir : '-'}"></p>
+                                    </td>
+                                    <td class="p-4">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
                                             <span th:text="${transaksi.daftarItem.size()}"></span> Item
                                         </span>
@@ -61,16 +65,24 @@
                                     <td class="p-4 text-right">
                                         <p class="font-black text-emerald-600" th:text="${T(com.kasir.manajemenkasir.util.FormatRupiah).format(transaksi.totalBayar)}"></p>
                                     </td>
-                                    <td class="p-4 text-center">
-                                        <a th:href="@{/riwayat-transaksi/detail/{id}(id=${transaksi.idTransaksi})}" class="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-800 hover:text-white font-bold transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                            Detail
-                                        </a>
-                                    </td>
+                                     <td class="p-4 text-center">
+                                         <div class="flex items-center justify-center gap-2">
+                                             <a th:href="@{/riwayat-transaksi/detail/{id}(id=${transaksi.idTransaksi})}" class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-800 hover:text-white font-bold transition text-xs">
+                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                 Detail
+                                             </a>
+                                             <a th:href="@{/riwayat-transaksi/hapus/{id}(id=${transaksi.idTransaksi})}" 
+                                                onclick="return confirm('Peringatan: Apakah Anda yakin ingin menghapus nota transaksi ini secara permanen dari sistem?')"
+                                                class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white font-bold transition text-xs border border-rose-200">
+                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                 Hapus
+                                             </a>
+                                         </div>
+                                     </td>
                                 </tr>
-
+ 
                                 <tr th:if="${daftarTransaksi.size() == 0}">
-                                    <td colspan="5" class="py-16 text-center">
+                                    <td colspan="6" class="py-16 text-center">
                                         <div class="flex flex-col items-center justify-center">
                                             <span class="text-4xl mb-4">📭</span>
                                             <p class="text-lg font-bold text-slate-700">Belum ada riwayat transaksi</p>

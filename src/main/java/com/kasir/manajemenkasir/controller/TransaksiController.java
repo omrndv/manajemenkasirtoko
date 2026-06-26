@@ -2,6 +2,8 @@ package com.kasir.manajemenkasir.controller;
 
 import com.kasir.manajemenkasir.model.Transaksi;
 import com.kasir.manajemenkasir.model.User;
+import com.kasir.manajemenkasir.model.Admin;
+import com.kasir.manajemenkasir.model.Kasir;
 import com.kasir.manajemenkasir.service.BarangService;
 import com.kasir.manajemenkasir.service.TransaksiService;
 import com.kasir.manajemenkasir.service.AktivitasLogService;
@@ -97,6 +99,16 @@ public class TransaksiController {
         try {
             double kembalian = transaksiService.hitungKembalian(transaksiAktif, uangDibayar);
             transaksiAktif.setUangDibayar(uangDibayar);
+            
+            // Set nama kasir yang melayani
+            String namaKasir = user.getUsername();
+            if (user instanceof Kasir) {
+                namaKasir = ((Kasir) user).getNamaKasir();
+            } else if (user instanceof Admin) {
+                namaKasir = ((Admin) user).getNamaAdmin();
+            }
+            transaksiAktif.setNamaKasir(namaKasir);
+
             Transaksi savedTransaksi = transaksiService.simpanTransaksi(transaksiAktif);
 
             aktivitasLogService.log(user, "Melakukan transaksi penjualan #" + savedTransaksi.getIdTransaksi() + " (Total: Rp " + savedTransaksi.getTotalBayar() + ")");
@@ -146,11 +158,26 @@ public class TransaksiController {
         }
 
         User user = (User) session.getAttribute("userLogin");
-
         model.addAttribute("user", user);
         model.addAttribute("transaksi", transaksi);
 
         return "detail-transaksi";
+    }
+
+    @GetMapping("/riwayat-transaksi/hapus/{id}")
+    public String hapusTransaksi(@PathVariable int id, HttpSession session) {
+        if (belumLogin(session)) {
+            return "redirect:/";
+        }
+
+        User user = (User) session.getAttribute("userLogin");
+        Transaksi transaksi = transaksiService.getTransaksiById(id);
+        if (transaksi != null && transaksi.getToko().getIdToko() == user.getToko().getIdToko()) {
+            transaksiService.hapusTransaksi(id);
+            aktivitasLogService.log(user, "Menghapus nota transaksi #" + id + " (Total: Rp " + transaksi.getTotalBayar() + ")");
+        }
+
+        return "redirect:/riwayat-transaksi";
     }
 
     @GetMapping("/transaksi/hapus-item/{idItem}")

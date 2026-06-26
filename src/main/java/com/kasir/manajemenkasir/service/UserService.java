@@ -130,4 +130,8 @@ public class UserService {
         sa.setIdUser(-1);
         return sa;
     }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 }
